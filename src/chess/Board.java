@@ -14,11 +14,41 @@ import java.util.ArrayList;
  *
  * @author karlo
  */
+
+
+/*
+
+    Pieces are initialised as numbers  
+
+    10 = white square
+    20 = black square
+    
+    11 = white pawn
+    12 = white rook
+    13 = white knight
+    14 = white bishop
+    15 = white queen
+    16 = white king
+    
+    21 = black pawn
+    22 = black rook
+    23 = black knight
+    24 = black bishop
+    25 = black queen
+    26 = black king
+    */
+
 public class Board {
     
     ArrayList<Square> board = new ArrayList<>();
     
-    public Board()
+    ArrayList<Piece> white = new ArrayList<>(); //When we do pieces
+    ArrayList<Piece> black = new ArrayList<>();
+    
+    
+    
+    
+     public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
     {
         boolean colour = false; 
         for(int row = 1; row <= 8; row++)
@@ -28,38 +58,75 @@ public class Board {
             {
                 Square square = new Square(file, row);
                 
-                if(colour)
+                if(colour) //colour assigning
                 {
-                    square.value = '▅';
+                    square.tileValue = 10;
                     colour = !colour;
                 }
                 else
                 {
-                    square.value = '▭';
+                    square.tileValue = 20;
                     colour = !colour;
+                }   
                 
-                }
                 
-                if(row == 2)
+                
+                if(row == 7)  //piece assigning
                 {
-                    square.value = '♟';
-
+                    square.piece = 11;
                 }
-                
-                if(row == 7)
+                else if(row == 2)
                 {
-                    square.value = '♙';
-
+                    square.piece = 21;
+                }
+                else if(row == 1 && file == 1 || row == 1 && file == 8)
+                {
+                    square.piece = 22;
+                }
+                else if(row == 1 && file == 2 || row == 1 && file == 7)
+                {
+                    square.piece = 23;
+                }
+                else if(row == 1 && file == 3 || row == 1 && file == 6)
+                {
+                    square.piece = 24;
+                }
+                else if(row == 1 && file == 4)
+                {
+                    square.piece = 25;
+                }
+                else if(row == 1 && file == 5)
+                {
+                    square.piece = 26;
+                }
+                else if(row == 8 && file == 1 || row == 8 && file == 8)
+                {
+                    square.piece = 12;
+                }
+                else if(row == 8 && file == 2 || row == 8 && file == 7)
+                {
+                    square.piece = 13;
+                }
+                else if(row == 8 && file == 3 || row == 8 && file == 6)
+                {
+                    square.piece = 14;
+                }
+                else if(row == 8 && file == 4)
+                {
+                    square.piece = 15;
+                }
+                else if(row == 8 && file == 5)
+                {
+                    square.piece = 16;
                 }
                 
                 board.add(square);
-        
                 }
         }
     }
     
     
-    public void print()
+    public void drawBoard() //turns the collection of numbers into physical representation
     {
         int row = 1;
         for(Square item : board)
@@ -77,8 +144,14 @@ public class Board {
             System.out.print(' ');
             System.out.print(' ');
             
-            System.out.print(item.value);
-            
+            if(item.piece == 0)
+            {
+                System.out.print(item.getTileValue());
+            }
+            else
+            {
+                System.out.print(item.getCharValue());
+            }
             
         }
         System.out.println();
