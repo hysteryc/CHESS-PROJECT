@@ -125,6 +125,10 @@ public class Board {
         }
     }
     
+    public ArrayList<Square> getBoard() 
+    {
+        return board;
+    }
     
     public void drawBoard() //turns the collection of numbers into physical representation
     {
