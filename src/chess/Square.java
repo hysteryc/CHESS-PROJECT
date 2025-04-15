@@ -62,27 +62,16 @@ public class Square {
       
     }
     
+    public void changePiece(int value)
+    {
+        this.piece = value;
+    }
+    
     public char getTileValue() //Return tile char representation
     {
             if(tileValue == 10) return '▭';
             return '▅';
     }
     
-    
-    public int fileToInt(char file) // Will use later for user inputs
-    {
-        return switch (file) {
-            case 'a' -> 1;
-            case 'b' -> 2;
-            case 'c' -> 3;
-            case 'd' -> 4;
-            case 'e' -> 5;
-            case 'f' -> 6;
-            case 'g' -> 7;
-            case 'h' -> 8;
-            default -> 0;
-        };
-        
-    }
 }
 

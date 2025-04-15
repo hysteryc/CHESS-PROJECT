@@ -130,11 +130,58 @@ public class Board {
         return board;
     }
     
+    private coordinates translate_input(String input) // Translates a string input to int coordinates
+    {
+        int x = Integer.valueOf(Character.toLowerCase(input.charAt(0))) - 96;
+        
+        int y = Integer.valueOf(String.valueOf(input.charAt(1)));
+              
+        coordinates pair = new coordinates(x, y);
+        
+        return pair;
+    }
+    
+    private int getSquareIndex(int x, int y) //Mathematical sequence to determine the index of a square when given coordinates
+    {
+        return Math.abs(y-8)*8 + x-1;
+    }
+    
+    public void movePiece(String position, String movement) 
+    {
+     
+        coordinates old_coordinates = translate_input(position);
+        coordinates new_coordinates = translate_input(movement);
+        
+        System.out.println(old_coordinates.x + ", " + old_coordinates.y);
+        System.out.println(new_coordinates.x + ", " + new_coordinates.y);
+        
+        int old_index = getSquareIndex(old_coordinates.x, old_coordinates.y);
+        int new_index = getSquareIndex(new_coordinates.x, new_coordinates.y);
+          
+        System.out.println(old_index);
+        System.out.println(new_index);
+        
+        for(Square item : board)
+        {
+            System.out.println(board.indexOf(item));
+        }
+
+        int piece = board.get(old_index).piece;
+        
+        
+        board.get(old_index).changePiece(0);
+        board.get(new_index).changePiece(piece);
+
+        
+    }
+    
     public void drawBoard() //turns the collection of numbers into physical representation
     {
         int row = 1;
         for(Square item : board)
         {
+            
+           
             
             
             if(row != item.row)
@@ -142,6 +189,11 @@ public class Board {
                 System.out.println();
                 System.out.println();
                 row++;
+            }
+           
+            if(item.file == 1)
+            {
+                System.out.print(Math.abs(row-9));
             }
             
             System.out.print(' ');
@@ -157,8 +209,13 @@ public class Board {
                 System.out.print(item.getCharValue());
             }
             
+            
+            
         }
-        System.out.println();
+        
+        System.out.println("\n    a    b    c   d    e    f    g    h");
+        
+       
     }
 }
 

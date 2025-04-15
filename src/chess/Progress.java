@@ -27,6 +27,10 @@ public class Progress
     //Writing Existing Board to a file (data as a string) for further to load when implementing...
     public void Save(String filepath) 
     {
+        
+         
+
+        
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) 
         {
             for (Square square : board.getBoard()) 
@@ -34,10 +38,11 @@ public class Progress
                 writer.write(square.file + "," + square.row + "," + square.tileValue + "," + square.piece);
                 writer.newLine();
             }
+            System.out.println("FILE SAVED");
         } 
         catch (IOException e) 
         {
-
+            System.out.println("DID NOT SAVE");
         }
     }
     

@@ -11,11 +11,23 @@ public class Chess {
 
     /**
      * @param args the command line arguments
+     * C:CHESS-PROJECT\ChessFiles
      */
     public static void main(String[] args) 
     {
         Board board = new Board();
+        Progress save = new Progress(board);
+        Interface game = new Interface();
+        
         board.drawBoard();
+        //game.run(board);
+        
+        
+        
+        save.Save("ChessFiles/BoardData.txt");
+
+        
+        
     }
     
 }
