@@ -4,20 +4,50 @@
  */
 package chess;
 
+import java.util.List;
+
 /**
  *
- * @author karlo
+ * @author teddy
  */
-public class Piece { //will be used soon
+public abstract class Piece 
+{ 
     int row;
     int file;
     int pieceType;
     int material;
+    boolean isWhite;
     
-    public Piece(int row, int file, int pieceType)
+    public Piece(int row, int file, boolean isWhite)
+    {
+        this.row = row;
+        this.file = file;
+        this.isWhite = isWhite;
+    }
+    
+    public int getFile()
+    {
+        return file;
+    }
+    
+    public int getRow()
+    {
+        return row;
+    }
+    
+    public boolean isWhite()
+    {
+        return isWhite;
+    }
+    
+    public void setPosition(int row, int file)
     {
         this.row = row;
         this.file = file;
     }
+    
+    public abstract char getSymbol();
+    
+    public abstract List<coordinates> getLegalMoves(Board board);
 }
 
