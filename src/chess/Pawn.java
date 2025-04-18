@@ -8,6 +8,7 @@ package chess;
  *
  * @author teddy
  */
+
 public class Pawn extends Piece
 {
     boolean firstMove = true;
@@ -23,7 +24,7 @@ public class Pawn extends Piece
     }
     
     @Override
-public boolean validMoveWhite(Board board, Coordinate destination) { 
+    public boolean validMoveWhite(Board board, Coordinate destination) { 
     // Basic validation checks
     
     if (!withinBounds(destination)) {
@@ -75,5 +76,4 @@ public boolean validMoveWhite(Board board, Coordinate destination) {
     System.out.println("Invalid pawn move pattern");
     return false;
 }
-    
 }

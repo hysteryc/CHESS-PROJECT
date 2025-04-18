@@ -10,8 +10,7 @@ import java.util.List;
  *
  * @author teddy
  */
-public class Piece 
-{ 
+public class Piece { //will be used soon
     int row;
     int file;
     int pieceType;
@@ -40,24 +39,24 @@ public class Piece
         return isWhite;
     }
     
-    public void setPosition(int row, int file)
+    
+    public Piece(int file, int row, int pieceType)
     {
         this.row = row;
         this.file = file;
+        this.pieceType = pieceType;
     }
     
     
-    public boolean validMoveWhite(Board board, Coordinate destination) 
+    public boolean withinBounds(Coordinate destination) // returns true if within bounds
+    {
+        return ((destination.file <= 8 && destination.file >= 1) && (destination.row <= 8 && destination.row >= 1));
+    }
+    
+    public boolean validMoveWhite(Board board, Coordinate destination)
     {
         return true;
     }
-    
-    public boolean withinBounds(Coordinate coordinate)
-    {
-        return coordinate.file >= 1 && coordinate.file <= 8 && coordinate.row >= 1 && coordinate.row <= 8;
-    }
-
-    
     
 }
 

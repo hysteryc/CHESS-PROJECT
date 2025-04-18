@@ -21,6 +21,7 @@ public class Interface {
     
     private Board run(Board board, boolean play)
     {
+        
         while(play)
         {
             System.out.println("Select Piece:");
@@ -31,11 +32,13 @@ public class Interface {
             System.out.println("Where do you want to move this piece?");
             String movement = scanner.next();
             
+
             Coordinate oldCoordinate = board.translateInput(position);
             Coordinate newCoordinate = board.translateInput(movement);
             //board.movePiece(position, movement);
-            
+
             Piece piece = board.getPiece(oldCoordinate);
+            
             
             System.out.println(piece.validMoveWhite(board, newCoordinate));
             board.movePiece(oldCoordinate, newCoordinate);

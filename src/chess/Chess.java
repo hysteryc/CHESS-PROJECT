@@ -20,6 +20,7 @@ public class Chess {
         Interface game = new Interface();
         
         board.drawBoard();
+        
         game.run(board);
         
         
