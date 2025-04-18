@@ -68,10 +68,11 @@ public class Progress
                 square.piece = piece;
                 squares.add(square);
             }
+            System.out.println("BOARD LOADED");
         } 
         catch (IOException e) 
         {
-            System.out.println("");
+            System.out.println("DID NOT LOAD");
         }
     }
 
