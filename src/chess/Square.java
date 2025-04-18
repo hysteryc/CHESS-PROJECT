@@ -8,7 +8,8 @@ package chess;
  *
  * @author karlo
  */
-public class Square {
+public class Square 
+{
     
     int row;
     int file;
@@ -38,6 +39,21 @@ public class Square {
     { 
         this.file = file;
         this.row = row;
+    }
+    
+    public int getFile()
+    {
+        return file;
+    }
+    
+    public int getRow()
+    {
+        return row;
+    }
+    
+    public int getPiece() 
+    { 
+        return piece; 
     }
     
     public char getCharValue() //Return piece char representation
