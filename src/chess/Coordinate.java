@@ -6,16 +6,17 @@ package chess;
 
 /**
  *
- * @author karlo
+ * @author mymac
  */
-public class coordinates {
+public class Coordinate {
     
-    public int x;
-    public int y;
+    public int file;
+    public int row;
 
-    public coordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Coordinate(int file, int row) {
+        this.file = file;
+        this.row = row;
     }
 
 }
+

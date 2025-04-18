@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author teddy
  */
-public abstract class Piece 
+public class Piece 
 { 
     int row;
     int file;
@@ -46,8 +46,18 @@ public abstract class Piece
         this.file = file;
     }
     
-    public abstract char getSymbol();
     
-    public abstract List<coordinates> getLegalMoves(Board board);
+    public boolean validMoveWhite(Board board, Coordinate destination) 
+    {
+        return true;
+    }
+    
+    public boolean withinBounds(Coordinate coordinate)
+    {
+        return coordinate.file >= 1 && coordinate.file <= 8 && coordinate.row >= 1 && coordinate.row <= 8;
+    }
+
+    
+    
 }
 

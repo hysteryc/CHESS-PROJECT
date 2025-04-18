@@ -20,11 +20,11 @@ public class Chess {
         Interface game = new Interface();
         
         board.drawBoard();
-        //game.run(board);
+        game.run(board);
         
         
         
-        save.Save("ChessFiles/BoardData.txt");
+        //save.Save("ChessFiles/BoardData.txt");
 
         
         

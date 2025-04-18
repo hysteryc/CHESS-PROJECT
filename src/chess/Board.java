@@ -41,22 +41,18 @@ import java.util.ArrayList;
 public class Board {
     
     ArrayList<Square> board = new ArrayList<>();
-    
-    ArrayList<Piece> white = new ArrayList<>(); //When we do pieces
-    ArrayList<Piece> black = new ArrayList<>();
-    
-    
-    
+    ArrayList<Piece> white = new ArrayList<>();
     
      public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
     {
+        int index = 0;
         boolean colour = false; 
         for(int row = 1; row <= 8; row++)
         {
             colour = !colour;
             for(int file = 1; file <= 8; file++)
             {
-                Square square = new Square(file, row);
+                Square square = new Square(file, row, null);
                 
                 if(colour) //colour assigning
                 {
@@ -71,56 +67,61 @@ public class Board {
                 
                 
                 
+                
                 if(row == 7)  //piece assigning
                 {
-                    square.piece = 11;
+                    square.pieceType = -11;
+                    square.piece = new Pawn(row, file, false);   
                 }
                 else if(row == 2)
                 {
-                    square.piece = 21;
+                    square.pieceType = 11;
+                    square.piece = new Pawn(row, file, true);
                 }
                 else if(row == 1 && file == 1 || row == 1 && file == 8)
                 {
-                    square.piece = 22;
+                    square.pieceType = 12;
                 }
                 else if(row == 1 && file == 2 || row == 1 && file == 7)
                 {
-                    square.piece = 23;
+                    square.pieceType = 13;
                 }
                 else if(row == 1 && file == 3 || row == 1 && file == 6)
                 {
-                    square.piece = 24;
+                    square.pieceType = 14;
                 }
                 else if(row == 1 && file == 4)
                 {
-                    square.piece = 25;
+                    square.pieceType = 15;
                 }
                 else if(row == 1 && file == 5)
                 {
-                    square.piece = 26;
+                    square.pieceType = 16;
                 }
                 else if(row == 8 && file == 1 || row == 8 && file == 8)
                 {
-                    square.piece = 12;
+                    square.pieceType = -12;
                 }
                 else if(row == 8 && file == 2 || row == 8 && file == 7)
                 {
-                    square.piece = 13;
+                    square.pieceType = -13;
                 }
                 else if(row == 8 && file == 3 || row == 8 && file == 6)
                 {
-                    square.piece = 14;
+                    square.pieceType = -14;
                 }
                 else if(row == 8 && file == 4)
                 {
-                    square.piece = 15;
+                    square.pieceType = -15;
                 }
                 else if(row == 8 && file == 5)
                 {
-                    square.piece = 16;
+                    square.pieceType = -16;
                 }
                 
                 board.add(square);
+                System.out.println("Index: " + index +", File: " + file + ", Row: " + row + ", Piece: " + square.piece);
+                index++;
                 }
         }
     }
@@ -130,121 +131,102 @@ public class Board {
         return board;
     }
     
-    private coordinates translate_input(String input) // Translates a string input to int coordinates
+    public Coordinate translateInput(String input) // Translates a string input to int coordinates
     {
-        int x = Integer.valueOf(Character.toLowerCase(input.charAt(0))) - 96;
+        int file = Integer.valueOf(Character.toLowerCase(input.charAt(0))) - 96;
         
-        int y = Integer.valueOf(String.valueOf(input.charAt(1)));
-              
-        coordinates pair = new coordinates(x, y);
+        int row = Integer.parseInt(String.valueOf(input.charAt(1)));
+        
+        
+        
+        Coordinate pair = new Coordinate(file, row);
+        
+        
         
         return pair;
     }
     
-    public int getSquareIndex(int x, int y) //Mathematical sequence to determine the index of a square when given coordinates
-    {
-        return Math.abs(y-8)*8 + x-1;
+    public int checkSquare(Coordinate destination)
+    {   
+        int index = getSquareIndex(destination.file, destination.row);
+        Square square = board.get(index);
+        System.out.println(square.piece);
+
+        return square.pieceType;
     }
     
-    public void movePiece(String position, String movement) 
+    private int getSquareIndex(int file, int row) //Mathematical sequence to determine the index of a square when given coordinates
     {
-     
-        coordinates old_coordinates = translate_input(position);
-        coordinates new_coordinates = translate_input(movement);
+        //x, y
+        //1, 1 = 1
+        //2, 1 = 2
+        //1, 2 = 9
+        //1, 3 = 16
+        System.out.println("File: " + file);
+        System.out.println("Row: " + row);
+        System.out.println((row*8)-8+(file-1));
+        return ((row*8)-8)+(file-1);
+    }
+    
+    public Piece getPiece(Coordinate coordinate)
+    {
+        int index = getSquareIndex(coordinate.file, coordinate.row);
+        Square square = board.get(index);
+        return square.piece;
+                
+    }
+    
+    public void movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
+    {
         
-        System.out.println(old_coordinates.x + ", " + old_coordinates.y);
-        System.out.println(new_coordinates.x + ", " + new_coordinates.y);
+        System.out.println(old_coordinates.file + ", " + old_coordinates.row);
+        System.out.println(new_coordinates.file + ", " + new_coordinates.row);
         
-        int old_index = getSquareIndex(old_coordinates.x, old_coordinates.y);
-        int new_index = getSquareIndex(new_coordinates.x, new_coordinates.y);
+        int old_index = getSquareIndex(old_coordinates.file, old_coordinates.row);
+        int new_index = getSquareIndex(new_coordinates.file, new_coordinates.row);
           
-        System.out.println(old_index);
-        System.out.println(new_index);
-        
-        for(Square item : board)
-        {
-            System.out.println(board.indexOf(item));
-        }
+        System.out.println("Old index: "+ old_index);
+        System.out.println("New index: "+ new_index);
 
-        int piece = board.get(old_index).piece;
+        int pieceType = board.get(old_index).pieceType;
+        Piece piece = board.get(old_index).piece;
         
-        
-        board.get(old_index).changePiece(0);
-        board.get(new_index).changePiece(piece);
-
+        board.get(old_index).changePiece(0, null);
+        board.get(new_index).changePiece(pieceType, piece);
         
     }
-    
-    // Get Piece At function gets the peice at a certain square on the board... and creates a new object depending on the int value it is given...
-    public Piece getPieceAt(int file, int row)
-    {
-        for(Square square : board)
-        {
-            if(square.getFile() == file && square.getRow() == row)
-            {
-                int pieceValue = square.getPiece();
-                if (pieceValue == 0) return null;
-                boolean isWhite = pieceValue < 20;
-                int type = pieceValue % 10;
-                
-                switch(type)
-                {
-                    case 1: return new Pawn(row, file, isWhite);
-                    
-                }
-                
-            }
-        }
-        return null;
-    }
-    
-    //checks if square on board is empty 
-    public boolean isEmptySquare(int file, int row)
-    {
-        int n = getSquareIndex(file, row);
-        
-        if(n < 0 ||  n >= board.size())
-        {
-            return false;
-        }
-        return board.get(n).piece == 0;
-    }
-    
+    /*
     public void drawBoard() //turns the collection of numbers into physical representation
     {
-        int row = 1;
-        for(Square item : board)
+        int row = 8;
+        for(int i = 63; i >= 0; i--)
         {
+            Square square = board.get(i);
             
-           
-            
-            
-            if(row != item.row)
+            if(row == square.row)
             {
                 System.out.println();
                 System.out.println();
-                row++;
+                System.out.print(row);
+                row--;
             }
            
-            if(item.file == 1)
+            System.out.print(' ');
+            System.out.print(' ');
+            System.out.print(' ');
+            
+            if(square.pieceType == 0 && i == 16)
             {
-                System.out.print(Math.abs(row-9));
+                System.out.print(" x ");
             }
-            
-            System.out.print(' ');
-            System.out.print(' ');
-            System.out.print(' ');
-            
-            if(item.piece == 0)
+            else if(square.pieceType == 0)
             {
-                System.out.print(item.getTileValue());
+                System.out.print(square.getTileValue());
             }
             else
             {
-                System.out.print(item.getCharValue());
+                System.out.print(square.getCharValue());
             }
-            
-            
             
         }
         
@@ -252,5 +234,47 @@ public class Board {
         
        
     }
+    */
+    
+    public void drawBoard() //turns the collection of numbers into physical representation
+    {
+        System.out.println("     |     |     |     |     |     |     |     |     |");
+        System.out.println("     |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |");
+        System.out.println("     |     |     |     |     |     |     |     |     |");
+        System.out.println("-----+-----+-----+-----+-----+-----+-----+-----+-----+-----");
+        System.out.println("     |     |     |     |     |     |     |     |     |");
+         
+        for(int i = 8; i >= 1; i--)
+        {
+            
+            
+            System.out.print("  ");
+            System.out.print(i);
+            
+           
+            for(int ii = 1; ii <= 8; ii++)
+            {
+                Square square = board.get(((i*8)-8)+(ii-1));
+                System.out.print("  |  ");
+                
+               
+                if(square.pieceType == 0)
+                {
+                    System.out.print(square.getTileValue());
+                }
+                else
+                {
+                    System.out.print(square.getCharValue());
+                }
+            }
+            System.out.print("  |  " + i);
+            System.out.println();
+            System.out.println("     |     |     |     |     |     |     |     |     |");
+            System.out.println("-----+-----+-----+-----+-----+-----+-----+-----+-----+-----");
+            System.out.println("     |     |     |     |     |     |     |     |     |");
+            
+        }
+            System.out.println("     |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |");
+            System.out.println("     |     |     |     |     |     |     |     |     |");
+    }
 }
-

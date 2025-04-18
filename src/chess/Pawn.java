@@ -4,15 +4,17 @@
  */
 package chess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author teddy
  */
 public class Pawn extends Piece
 {
+    boolean firstMove = true;
+    
+    //Missing en passant
+    //Missing promotion
+    
     public Pawn(int row, int file, boolean isWhite)
     {
         super(row, file, isWhite);
@@ -20,58 +22,58 @@ public class Pawn extends Piece
         this.pieceType = 1;
     }
     
-    @Override 
-    public char getSymbol()
-    {
-        return isWhite ? '♙' : '♟';
+    @Override
+public boolean validMoveWhite(Board board, Coordinate destination) { 
+    // Basic validation checks
+    
+    if (!withinBounds(destination)) {
+        
+        return false;
     }
     
-    //Displays all the legal moves a pawn can achieve at its current position...
-    @Override 
-    public List<coordinates> getLegalMoves(Board board)
-    {
-        List<coordinates> possibleMoves = new ArrayList<>();
-        int direction =  isWhite ? -1 : 1;
+    if (row == destination.row && file == destination.file) {
         
-        //Moving foward one space on the board
-        int newRow = row + direction;
-        if(board.isEmptySquare(file, newRow))
-        {
-            possibleMoves.add(new coordinates(file, newRow));
-            
-            if((isWhite && row == 2) || (!isWhite && row == 7))
-            {
-                int twoSpaces = row + 2 * direction;
-                if(board.isEmptySquare(file, twoSpaces))
-                {
-                    possibleMoves.add(new coordinates(file, twoSpaces));
-                }
-            }
-        }
-        
-        //capture piece to the left of the pawn.
-        if(file > 1)
-        {
-            int leftCol = file - 1;
-            int leftRow = row + direction;
-            Piece pieceOnLeft = board.getPieceAt(leftCol, leftRow);
-            if (pieceOnLeft != null && pieceOnLeft.isWhite() != isWhite) 
-            { 
-                possibleMoves.add(new coordinates(leftCol, leftRow));
-            } 
-        }
-        
-        //capture piece to the right of pawn.
-        if (file < 8) 
-        {
-            int rightCol = file + 1;
-            int rightRow = row + direction;
-            Piece pieceOnRight = board.getPieceAt(rightCol, rightRow);
-            if (pieceOnRight != null && pieceOnRight.isWhite() != isWhite) 
-            {
-                possibleMoves.add(new coordinates(rightCol, rightRow));
-            }
-        }   
-        return possibleMoves;
+        return false;
     }
+
+    int deltaFile = destination.file - file;
+    int deltaRow = destination.row - row;
+    
+    System.out.println(deltaFile);
+    System.out.println(deltaRow);
+
+    // Pawns can only move forward (positive deltaFile for white)
+    if (deltaRow <= 0) {
+        System.out.println("Pawns must move forward");
+        return false;
+    }
+
+    // Normal forward move (1 square)
+    if (deltaRow == 1 && deltaFile == 0) {
+        boolean isEmpty = board.checkSquare(destination) == 0;
+        System.out.println("Normal move - destination " + (isEmpty ? "empty" : "occupied"));
+        return isEmpty;
+    }
+
+    // Initial two-square move
+    if (firstMove && deltaRow == 2 && deltaFile == 0) {
+        Coordinate intermediate = new Coordinate(file, row+1);
+        boolean pathClear = board.checkSquare(intermediate) == 0 && 
+                          board.checkSquare(destination) == 0;
+        System.out.println("Two-square move - path " + (pathClear ? "clear" : "blocked"));
+        return pathClear;
+    }
+            
+    // Diagonal capture
+    if (deltaRow == 1 && Math.abs(deltaFile) == 1) {
+        int destinationPiece = board.checkSquare(destination);
+        boolean canCapture = destinationPiece < 0; // Assuming black pieces are negative
+        System.out.println("Capture attempt - " + (canCapture ? "valid" : "invalid"));
+        return canCapture;
+    }
+
+    System.out.println("Invalid pawn move pattern");
+    return false;
+}
+    
 }

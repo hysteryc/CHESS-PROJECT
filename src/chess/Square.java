@@ -10,12 +10,12 @@ package chess;
  */
 public class Square 
 {
-    
     int row;
     int file;
     int tileValue;
-    int piece;
-            
+    int pieceType;
+    Piece piece;
+    
     /*
     10 = white square
     20 = black square
@@ -35,10 +35,11 @@ public class Square
     26 = black king
     */
     
-    public Square(int file, int row)
+    public Square(int file, int row, Piece piece)
     { 
         this.file = file;
         this.row = row;
+        this.piece = piece;
     }
     
     public int getFile()
@@ -51,14 +52,14 @@ public class Square
         return row;
     }
     
-    public int getPiece() 
+    public Piece getPiece() 
     { 
         return piece; 
     }
     
     public char getCharValue() //Return piece char representation
     {
-            return switch (piece) {
+            return switch (pieceType) {
                 
                 case 11 -> '♙';
                 case 12 -> '♖';
@@ -67,20 +68,21 @@ public class Square
                 case 15 -> '♕';
                 case 16 -> '♔';
                 
-                case 21 -> '♟';
-                case 22 -> '♜';
-                case 23 -> '♞';
-                case 24 -> '♝';
-                case 25 -> '♛';
-                case 26 -> '♚';
+                case -11 -> '♟';
+                case -12 -> '♜';
+                case -13 -> '♞';
+                case -14 -> '♝';
+                case -15 -> '♛';
+                case -16 -> '♚';
                 default -> ' ';
             };
       
     }
     
-    public void changePiece(int value)
+    public void changePiece(int value, Piece piece)
     {
-        this.piece = value;
+        this.pieceType = value;
+        this.piece = piece;
     }
     
     public char getTileValue() //Return tile char representation

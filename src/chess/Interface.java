@@ -31,10 +31,14 @@ public class Interface {
             System.out.println("Where do you want to move this piece?");
             String movement = scanner.next();
             
-            board.movePiece(position, movement);
+            Coordinate oldCoordinate = board.translateInput(position);
+            Coordinate newCoordinate = board.translateInput(movement);
+            //board.movePiece(position, movement);
             
+            Piece piece = board.getPiece(oldCoordinate);
             
-            
+            System.out.println(piece.validMoveWhite(board, newCoordinate));
+            board.movePiece(oldCoordinate, newCoordinate);
             board.drawBoard();
         
         }

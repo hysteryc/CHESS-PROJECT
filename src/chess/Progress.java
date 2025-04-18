@@ -47,33 +47,33 @@ public class Progress
     }
     
     //Loading the Previous Board Still need to enter the file locations...
-    public void Load(String filepath) 
-    {
-        ArrayList<Square> squares = board.getBoard(); 
-        squares.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) 
-        {
-            String line;
-            //Reads while there is a next line in the file...
-            while ((line = reader.readLine()) != null) 
-            {
-                String[] split = line.split(",");
-                //parses because it is recieving a string thus transfroming into an int.
-                int file = Integer.parseInt(split[0]);
-                int row = Integer.parseInt(split[1]);
-                int tileValue = Integer.parseInt(split[2]);
-                int piece = Integer.parseInt(split[3]);
-                Square square = new Square(file, row);
-                square.tileValue = tileValue;
-                square.piece = piece;
-                squares.add(square);
-            }
-            System.out.println("BOARD LOADED");
-        } 
-        catch (IOException e) 
-        {
-            System.out.println("DID NOT LOAD");
-        }
-    }
+//    public void Load(String filepath) 
+//    {
+//        ArrayList<Square> squares = board.getBoard(); 
+//        squares.clear();
+//        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) 
+//        {
+//            String line;
+//            //Reads while there is a next line in the file...
+//            while ((line = reader.readLine()) != null) 
+//            {
+//                String[] split = line.split(",");
+//                //parses because it is recieving a string thus transfroming into an int.
+//                int file = Integer.parseInt(split[0]);
+//                int row = Integer.parseInt(split[1]);
+//                int tileValue = Integer.parseInt(split[2]);
+//                int piece = Integer.parseInt(split[3]);
+//                Square square = new Square(file, row);
+//                square.tileValue = tileValue;
+//                square.pieceType = piece;
+//                squares.add(square);
+//            }
+//            System.out.println("BOARD LOADED");
+//        } 
+//        catch (IOException e) 
+//        {
+//            System.out.println("DID NOT LOAD");
+//        }
+//    }
 
 }
