@@ -141,7 +141,7 @@ public class Board {
         return pair;
     }
     
-    private int getSquareIndex(int x, int y) //Mathematical sequence to determine the index of a square when given coordinates
+    public int getSquareIndex(int x, int y) //Mathematical sequence to determine the index of a square when given coordinates
     {
         return Math.abs(y-8)*8 + x-1;
     }
@@ -173,6 +173,41 @@ public class Board {
         board.get(new_index).changePiece(piece);
 
         
+    }
+    
+    // Get Piece At function gets the peice at a certain square on the board... and creates a new object depending on the int value it is given...
+    public Piece getPieceAt(int file, int row)
+    {
+        for(Square square : board)
+        {
+            if(square.getFile() == file && square.getRow() == row)
+            {
+                int pieceValue = square.getPiece();
+                if (pieceValue == 0) return null;
+                boolean isWhite = pieceValue < 20;
+                int type = pieceValue % 10;
+                
+                switch(type)
+                {
+                    case 1: return new Pawn(row, file, isWhite);
+                    
+                }
+                
+            }
+        }
+        return null;
+    }
+    
+    //checks if square on board is empty 
+    public boolean isEmptySquare(int file, int row)
+    {
+        int n = getSquareIndex(file, row);
+        
+        if(n < 0 ||  n >= board.size())
+        {
+            return false;
+        }
+        return board.get(n).piece == 0;
     }
     
     public void drawBoard() //turns the collection of numbers into physical representation
