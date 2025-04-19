@@ -87,8 +87,8 @@ public class Square
     
     public char getTileValue() //Return tile char representation
     {
-            if(tileValue == 10) return '▭';
-            return '▅';
+            if(tileValue == 10) return ' ';
+            return '□';
     }
     
 }

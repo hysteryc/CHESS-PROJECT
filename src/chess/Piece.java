@@ -16,12 +16,14 @@ public class Piece { //will be used soon
     int pieceType;
     int material;
     boolean isWhite;
+    boolean passantable;
     
     public Piece(int row, int file, boolean isWhite)
     {
         this.row = row;
         this.file = file;
         this.isWhite = isWhite;
+        passantable = false;
     }
     
     public int getFile()
@@ -53,10 +55,19 @@ public class Piece { //will be used soon
         return ((destination.file <= 8 && destination.file >= 1) && (destination.row <= 8 && destination.row >= 1));
     }
     
-    public boolean validMoveWhite(Board board, Coordinate destination)
+    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
     {
         return true;
     }
     
+    public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin) 
+    {
+        return true;
+    }      
+            
+    public boolean enPassantMove(Board board, Coordinate destination, Coordinate origin) 
+    {
+        return true;
+    } 
 }
 

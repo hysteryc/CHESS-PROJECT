@@ -167,11 +167,13 @@ public class Board {
     {   
         int index = getSquareIndex(destination.file, destination.row);
         Square square = board.get(index);
-        System.out.println(square.piece);
+        
 
         return square.pieceType;
 
     }
+    
+    
     
     private int getSquareIndex(int file, int row) //Mathematical sequence to determine the index of a square when given coordinates
     {
@@ -180,9 +182,6 @@ public class Board {
         //2, 1 = 2
         //1, 2 = 9
         //1, 3 = 16
-        System.out.println("File: " + file);
-        System.out.println("Row: " + row);
-        System.out.println((row*8)-8+(file-1));
         return ((row*8)-8)+(file-1);
     }
     
@@ -194,13 +193,40 @@ public class Board {
                 
     }
     
-
-    public void movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
+    public Piece enPassant(Coordinate old_coordinates, Coordinate new_coordinates) 
     {
         
-        System.out.println(old_coordinates.file + ", " + old_coordinates.row);
-        System.out.println(new_coordinates.file + ", " + new_coordinates.row);
+                
+        int old_index = getSquareIndex(old_coordinates.file, old_coordinates.row);
+        int new_index = getSquareIndex(new_coordinates.file, new_coordinates.row);
+       
+                
+        int pieceType = board.get(old_index).pieceType;
+        Piece piece = board.get(old_index).piece;
         
+        Piece victim = board.get(new_index).piece;
+
+                
+        boolean white = pieceType > 0;
+        
+        int direction = 1;
+        if(!white) direction = -1;
+
+        
+        int victimIndex = getSquareIndex(new_coordinates.file, new_coordinates.row + direction);
+        
+        board.get(old_index).changePiece(0, null);
+        board.get(victimIndex).changePiece(0, null);
+        board.get(new_index).changePiece(pieceType, piece);
+        
+        return victim;
+ 
+    }
+
+    public Piece movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
+    {
+        
+                
         int old_index = getSquareIndex(old_coordinates.file, old_coordinates.row);
         int new_index = getSquareIndex(new_coordinates.file, new_coordinates.row);
           
@@ -208,11 +234,13 @@ public class Board {
 
         int pieceType = board.get(old_index).pieceType;
         Piece piece = board.get(old_index).piece;
+        Piece victim = board.get(new_index).piece;
         
         board.get(old_index).changePiece(0, null);
         board.get(new_index).changePiece(pieceType, piece);
         
-
+        return victim;
+       
         
     }
     

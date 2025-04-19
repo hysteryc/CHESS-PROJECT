@@ -12,6 +12,8 @@ package chess;
 import java.util.Scanner;
 
 public class Interface {
+    boolean whiteTurn = true;
+    boolean possible = false;
     Scanner scanner = new Scanner(System.in);
     
     public Board run(Board board)
@@ -38,10 +40,34 @@ public class Interface {
             //board.movePiece(position, movement);
 
             Piece piece = board.getPiece(oldCoordinate);
+            Piece capture = null;
             
+            if(whiteTurn)
+            {
+                possible = piece.validMoveWhite(board, newCoordinate, oldCoordinate);
+                if(possible) capture = board.movePiece(oldCoordinate, newCoordinate);
+                    
+                
+            }
+            else
+            {
+                    possible = piece.validMoveBlack(board, newCoordinate, oldCoordinate);
+                    if(possible) capture = board.movePiece(oldCoordinate, newCoordinate);
+
+                
+            }
             
-            System.out.println(piece.validMoveWhite(board, newCoordinate));
-            board.movePiece(oldCoordinate, newCoordinate);
+            capture = board.getPiece(newCoordinate);
+            System.out.println(capture.passantable);
+
+            
+            whiteTurn = !whiteTurn;
+            
+            if(capture != null)
+            {
+                //remove from play; 
+            }
+            
             board.drawBoard();
         
         }
