@@ -248,6 +248,68 @@ public class Board {
         
     }
     
+    public Board copy() 
+    {
+        Board clone = new Board();
+
+        for (int row = 0; row < 8; row++) 
+        {
+            for (int file = 0; file < 8; file++) 
+            {
+                Coordinate coord = new Coordinate(row, file);
+                Piece piece = this.getPiece(coord);
+
+            if (piece != null) 
+            {
+                Piece newPiece = clonePiece(piece);
+                clone.setPiece(coord, newPiece);
+            }
+        }
+    }
+
+        return clone;
+    }
+    
+    public void setPiece(Coordinate coord, Piece piece) 
+    {
+        int index = getSquareIndex(coord.file, coord.row);
+        Square square = board.get(index);
+        square.piece = piece;  
+    }
+    
+    private Piece clonePiece(Piece piece) 
+    {
+        int row = piece.getRow();
+        int file = piece.getFile();
+        int type = piece.pieceType;
+
+        if(piece instanceof Pawn) 
+        {
+            return new Pawn(row, file, type);
+        } 
+        else if(piece instanceof Rook) 
+        {
+            return new Rook(row, file, type);
+        }
+        else if(piece instanceof Knight) 
+        {
+            return new Knight(row, file, type);
+        } 
+        else if(piece instanceof Bishop) 
+        {
+            return new Bishop(row, file, type);
+        } 
+        else if(piece instanceof Queen) 
+        {
+            return new Queen(row, file, type);
+        } 
+        else if(piece instanceof King) 
+        {
+            return new King(row, file, type);
+        }
+
+        return null;
+    }
     
     public void drawBoard() //turns the collection of numbers into physical representation
     {
