@@ -17,11 +17,10 @@ public class Pawn extends Piece
     //Missing en passant
     //Missing promotion
     
-    public Pawn(int row, int file, boolean isWhite)
+    public Pawn(int row, int file, int pieceType)
     {
-        super(row, file, isWhite);
+        super(row, file, pieceType);
         this.material = 1;
-        this.pieceType = 1;
         passantable = false;
     }
     
@@ -84,27 +83,7 @@ public class Pawn extends Piece
     return false;
 }   
     
-    @Override
-    public boolean enPassantMove(Board board, Coordinate destination, Coordinate origin) 
-    {
-        if(passantable != false) passantable = !passantable;
-        if (!withinBounds(destination)) return false;
-        
-        if (row == destination.row && file == destination.file) return false;
     
-
-        int deltaFile = destination.file - origin.file;
-        int deltaRow = destination.row - origin.row;
-        
-                origin.file += deltaFile;
-        
-        Piece victim = board.getPiece(origin);
-        if(victim != null) return victim.passantable;
-        
-        return false;
-        
-        
-    } 
     
     @Override
     public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin) { 

@@ -30,12 +30,12 @@ import java.util.ArrayList;
     15 = white queen
     16 = white king
     
-    21 = black pawn
-    22 = black rook
-    23 = black knight
-    24 = black bishop
-    25 = black queen
-    26 = black king
+    -11 = black pawn
+    -12 = black rook
+    -13 = black knight
+    -14 = black bishop
+    -15 = black queen
+    -16 = black king
     */
 
 public class Board {
@@ -72,13 +72,13 @@ public class Board {
                 if(row == 7)  //piece assigning
                 {
                     square.pieceType = -11;
-                    square.piece = new Pawn(row, file, false);   
+                    square.piece = new Pawn(row, file, -11);   
                     
                 }
                 else if(row == 2)
                 {
                     square.pieceType = 11;
-                    square.piece = new Pawn(row, file, true);
+                    square.piece = new Pawn(row, file, 11);
                     
                 }
                 else if(row == 1 && file == 1 || row == 1 && file == 8)
@@ -96,6 +96,7 @@ public class Board {
                 else if(row == 1 && file == 3 || row == 1 && file == 6)
                 {
                     square.pieceType = 14;
+                    square.piece = new Bishop(row, file, 14);
                   
                 }
                 else if(row == 1 && file == 4)
@@ -124,6 +125,7 @@ public class Board {
                 {
 
                     square.pieceType = -14;
+                    square.piece = new Bishop(row, file, -14);
 
                 }
                 else if(row == 8 && file == 4)

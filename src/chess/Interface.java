@@ -42,11 +42,12 @@ public class Interface {
             Piece piece = board.getPiece(oldCoordinate);
             Piece capture = null;
             
+            
             if(whiteTurn)
             {
                 possible = piece.validMoveWhite(board, newCoordinate, oldCoordinate);
                 if(possible) capture = board.movePiece(oldCoordinate, newCoordinate);
-                    
+                
                 
             }
             else
@@ -58,8 +59,6 @@ public class Interface {
             }
             
             capture = board.getPiece(newCoordinate);
-            System.out.println(capture.passantable);
-
             
             whiteTurn = !whiteTurn;
             

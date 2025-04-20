@@ -15,15 +15,14 @@ public class Piece { //will be used soon
     int file;
     int pieceType;
     int material;
-    boolean isWhite;
-    boolean passantable;
+ 
     
-    public Piece(int row, int file, boolean isWhite)
+    public Piece(int row, int file, int pieceType)
     {
         this.row = row;
         this.file = file;
-        this.isWhite = isWhite;
-        passantable = false;
+        this.pieceType = pieceType;
+        
     }
     
     public int getFile()
@@ -35,20 +34,6 @@ public class Piece { //will be used soon
     {
         return row;
     }
-    
-    public boolean isWhite()
-    {
-        return isWhite;
-    }
-    
-    
-    public Piece(int file, int row, int pieceType)
-    {
-        this.row = row;
-        this.file = file;
-        this.pieceType = pieceType;
-    }
-    
     
     public boolean withinBounds(Coordinate destination) // returns true if within bounds
     {
@@ -69,5 +54,7 @@ public class Piece { //will be used soon
     {
         return true;
     } 
+    
+    
 }
 
