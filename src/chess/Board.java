@@ -103,6 +103,7 @@ public class Board {
                 {
 
                     square.pieceType = 15;
+                    square.piece = new Queen(row, file, 15);
 
                 }
                 else if(row == 1 && file == 5)
@@ -132,6 +133,7 @@ public class Board {
                 {
 
                     square.pieceType = -15;
+                    square.piece = new Queen(row, file, -15);
                 }
                 else if(row == 8 && file == 5)
                 {
