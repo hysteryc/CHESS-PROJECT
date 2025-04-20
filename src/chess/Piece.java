@@ -4,18 +4,17 @@
  */
 package chess;
 
-import java.util.List;
-
 /**
  *
  * @author teddy
  */
-public class Piece { //will be used soon
+public class Piece 
+{ //will be used soon
     int row;
     int file;
     int pieceType;
     int material;
- 
+    boolean isWhite;
     
     public Piece(int row, int file, int pieceType)
     {
@@ -33,6 +32,11 @@ public class Piece { //will be used soon
     public int getRow()
     {
         return row;
+    }
+    
+    public boolean isWhite()
+    {
+        return isWhite;
     }
     
     public boolean withinBounds(Coordinate destination) // returns true if within bounds
