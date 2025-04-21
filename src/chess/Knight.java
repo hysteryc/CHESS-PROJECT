@@ -18,7 +18,7 @@ public class Knight extends Piece
     
     
     @Override
-    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
+    public boolean validMove(Board board, Coordinate destination, Coordinate origin)
     {
         if(!withinBounds(destination))
         {
@@ -32,7 +32,7 @@ public class Knight extends Piece
         
         int deltaFile = Math.abs(destination.file - origin.file);
         int deltaRow = Math.abs(destination.row - origin.row);
-        boolean lShapedMove = ((deltaRow == 2 && deltaFile == 1) || (deltaRow == 1 && deltaFile == 2));
+        boolean lShapedMove = ((Math.abs(deltaRow) == 2 && Math.abs(deltaFile) == 1) || (Math.abs(deltaRow) == 1 && Math.abs(deltaFile) == 2));
         
         if(!lShapedMove)
         {
@@ -40,41 +40,13 @@ public class Knight extends Piece
         }
         
         int destinationPiece = board.checkSquare(destination);
-        if(destinationPiece > 0)
-        {
-            return false;
-        }
-        return true;
+        
+        if(destinationPiece >= 0 && pieceType < 0) return true;
+        
+        else if(destinationPiece <= 0 && pieceType > 0) return true;
+        
+        return false;
+        
     }
     
-    @Override
-    public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin) 
-    {
-        if (!withinBounds(destination)) 
-        {
-            return false;
-        }
-
-        if (origin.row == destination.row && origin.file == destination.file) 
-        {
-            return false;
-        }
-
-        int deltaRow = Math.abs(destination.row - origin.row);
-        int deltaFile = Math.abs(destination.file - origin.file);
-
-        boolean lShapedMove = (deltaRow == 2 && deltaFile == 1) || (deltaRow == 1 && deltaFile == 2);
-
-        if (!lShapedMove) 
-        {
-            return false;
-        }
-
-        int destinationPiece = board.checkSquare(destination);
-        if (destinationPiece < 0) 
-        {
-            return false;
-        }
-        return true;
-    }
 }

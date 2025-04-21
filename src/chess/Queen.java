@@ -44,7 +44,7 @@ public class Queen extends Piece
         
     }
     
-    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
+    public boolean validMove(Board board, Coordinate destination, Coordinate origin)
     {
         
         if (!withinBounds(destination))  return false;

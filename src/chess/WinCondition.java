@@ -23,11 +23,11 @@ public class WinCondition
             {
                 Coordinate coordinate = new Coordinate(row, file);
                 Piece piece = board.getPiece(coordinate);
-                if(piece != null && piece.isWhite() != isWhite)
+                if(piece != null && piece.pieceType > 0 != isWhite)
                 {
                     boolean attackable = isWhite
-                        ? piece.validMoveBlack(board, kingPosition, coordinate)
-                        : piece.validMoveWhite(board, kingPosition, coordinate);        
+                        ? piece.validMove(board, kingPosition, coordinate)
+                        : piece.validMove(board, kingPosition, coordinate);        
                     if(attackable)
                     {
                         return true;
@@ -53,7 +53,7 @@ public class WinCondition
                 Coordinate origin = new Coordinate(row, file);
                 Piece piece = board.getPiece(origin);
 
-                if (piece != null && piece.isWhite() == isWhite) 
+                if (piece != null && piece.pieceType > 0 == isWhite) 
                 {
                     for (int toRow = 0; toRow < 8; toRow++) 
                     {
@@ -62,8 +62,8 @@ public class WinCondition
                             Coordinate destination = new Coordinate(toRow, toFile);
 
                             boolean valid = isWhite
-                                ? piece.validMoveWhite(board, destination, origin)
-                                : piece.validMoveBlack(board, destination, origin);
+                                ? piece.validMove(board, destination, origin)
+                                : piece.validMove(board, destination, origin);
 
                             if (valid) 
                             {
@@ -92,7 +92,7 @@ public class WinCondition
             {
                 Coordinate king = new Coordinate(row, file);
                 Piece piece = board.getPiece(king);
-                if(piece instanceof King && piece.isWhite() == isWhite)
+                if(piece instanceof King && piece.pieceType > 0 == isWhite)
                 {
                     return king;
                 }

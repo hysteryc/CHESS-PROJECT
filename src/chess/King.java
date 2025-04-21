@@ -16,34 +16,23 @@ public class King extends Piece
         this.material = 0;
     }
     
-    private boolean isValidMove(Board board, Coordinate destination, Coordinate origin, boolean isWhite)
+    
+    public boolean ValidMove(Board board, Coordinate destination, Coordinate origin)
     {
         int deltaRow = Math.abs(destination.row - origin.row);   
         int deltaFile = Math.abs(destination.file - origin.file);
-        if(deltaRow <= 1 && deltaFile <= 1 && !(deltaRow == 0 && deltaFile == 0))
+        
+        if(deltaRow > 1) return false;
+        if(deltaFile > 1) return false;
+        
+        if(!(deltaRow == 0 && deltaFile == 0))
         {
             int destinationPiece = board.checkSquare(destination);
-            
-            if((isWhite && destinationPiece > 0) || (!isWhite && destinationPiece < 0))
-            {
-                return false;
-            }
-            return true;
+            return (pieceType > 0 && destinationPiece > 0) || (pieceType < 0 && destinationPiece < 0);
         }
         return false;
     }
     
-    @Override
-    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
-    {
-        return isValidMove(board, destination, origin, true);
-    }
-    
-    @Override
-    public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin)
-    {
-        return isValidMove(board, destination, origin, false);
-    }
     
     
     

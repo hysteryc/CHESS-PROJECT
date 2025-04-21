@@ -16,29 +16,41 @@ public class Rook extends Piece
         this.material = 5;
     }
     
-    private boolean pathClear(Board board, Coordinate origin, Coordinate destination)
-    {
-        int rowDirection = Integer.compare(destination.row, origin.row);
-        int fileDirection = Integer.compare(destination.file, origin.file);
+    
+    private boolean pathClear(Board board, Coordinate destination, Coordinate origin, Coordinate movement)
+    {   
+        System.out.println("destination: " +  destination.file + ", " + destination.row);
         
-        int r = origin.row + rowDirection;
-        int f = origin.file + fileDirection;
         
-        while(r != destination.row || f != destination.file)
+        if((origin.file == destination.file) && (origin.row == destination.row)) return true;
+       
+        Coordinate nextSquare = new Coordinate(origin.file + movement.file, origin.row + movement.row);
+        int piece = board.checkSquare(nextSquare);
+        
+        System.out.println("nextSquare: " +  nextSquare.file + ", " + nextSquare.row);
+        System.out.println("piece: " + piece);
+        if(pieceType > 0 && piece > 0) return false;
+        if(pieceType < 0 && piece < 0) return false;
+        
+
+        if((pieceType > 0 && piece < 0) && ((nextSquare.file == destination.file) && (nextSquare.row == destination.row))) return true;
+        if((pieceType < 0 && piece > 0) && ((nextSquare.file == destination.file) && (nextSquare.row == destination.row))) return true;
+        
+        
+        if(piece == 0) 
         {
-            Coordinate check = new Coordinate(f, r);
-            if(board.checkSquare(check) != 0)
-            {
-                return false;
-            }
-            r += rowDirection;
-            f += fileDirection;
+            System.out.println("Moves");
+            return pathClear(board, destination, nextSquare, movement);
         }
-        return true;        
+            
+        return false;
+        
+        
     }
     
+    
     @Override
-    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
+    public boolean validMove(Board board, Coordinate destination, Coordinate origin)
     {
         if(!withinBounds(destination))
         {
@@ -58,44 +70,28 @@ public class Rook extends Piece
             return false;
         }
         
-        if(!pathClear(board, origin, destination))
-        {
-            return false;
-        }
+        int movementFile = 0;
+        int movementRow = 0;
         
-        int destinationPiece = board.checkSquare(destination);
-        if(destinationPiece > 0)
-        {
-            return false;
-        }
+                
+        if(deltaFile < 0) movementFile = -1;
+        else movementFile = 1;
         
-        return true;
+        if(deltaRow < 0) movementRow = -1;
+        else movementRow = 1;
+        
+        if(deltaFile == 0) movementFile = 0;
+        if(deltaRow == 0) movementRow = 0;
+        
+        Coordinate movement = new Coordinate(movementFile, movementRow);
+        
+        System.out.println("Movement: " + movementFile + ", " + movementRow);
+        
+        return pathClear(board, destination, origin, movement);
+        
+        
+        
+        
     }
-    
-    @Override
-    public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin) 
-    {
-        int deltaRow = destination.row - origin.row;
-        int deltaFile = destination.file - origin.file;
-
-        if (deltaRow != 0 && deltaFile != 0) 
-        {
-            return false;
-        }
-
-        if (!pathClear(board, origin, destination)) 
-        {
-            return false;
-        }
-
-        int destinationPiece = board.checkSquare(destination);
-        if (destinationPiece < 0) 
-        {
-            return false;
-        }
-
-        return true;
-    }
-    
    
 }

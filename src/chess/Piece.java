@@ -14,7 +14,6 @@ public class Piece
     int file;
     int pieceType;
     int material;
-    boolean isWhite;
     
     public Piece(int row, int file, int pieceType)
     {
@@ -34,30 +33,19 @@ public class Piece
         return row;
     }
     
-    public boolean isWhite()
-    {
-        return isWhite;
-    }
-    
     public boolean withinBounds(Coordinate destination) // returns true if within bounds
     {
         return ((destination.file <= 8 && destination.file >= 1) && (destination.row <= 8 && destination.row >= 1));
     }
-    
-    public boolean validMoveWhite(Board board, Coordinate destination, Coordinate origin)
-    {
-        return true;
-    }
-    
-    public boolean validMoveBlack(Board board, Coordinate destination, Coordinate origin) 
-    {
-        return true;
-    }      
-            
+         
     public boolean enPassantMove(Board board, Coordinate destination, Coordinate origin) 
     {
         return true;
     } 
+    public boolean validMove(Board board, Coordinate destination, Coordinate origin) 
+    {
+        return false;
+    }
     
     
 }

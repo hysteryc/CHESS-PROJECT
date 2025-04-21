@@ -41,10 +41,11 @@ import java.util.ArrayList;
 public class Board {
     
     ArrayList<Square> board = new ArrayList<>();
-    ArrayList<Piece> white = new ArrayList<>();
+    ArrayList<Coordinate> illegalBlackKingMoves = new ArrayList<>();
+    ArrayList<Coordinate> illegalWhiteKingMoves = new ArrayList<>();
 
     
-     public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
+    public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
     {
         int index = 0;
         boolean colour = false; 
@@ -67,8 +68,6 @@ public class Board {
                 }   
                 
                 
-                
-                
                 if(row == 7)  //piece assigning
                 {
                     square.pieceType = -11;
@@ -85,12 +84,14 @@ public class Board {
                 {
 
                     square.pieceType = 12;
+                    square.piece = new Rook(row, file, 12);
                    
                 }
                 else if(row == 1 && file == 2 || row == 1 && file == 7)
                 {
 
                     square.pieceType = 13;
+                    square.piece = new Knight(row, file, 13);
                     
                 }
                 else if(row == 1 && file == 3 || row == 1 && file == 6)
@@ -108,7 +109,7 @@ public class Board {
                 }
                 else if(row == 1 && file == 5)
                 {
-
+                    square.piece = new King(row, file, 16);
                     square.pieceType = 16;
 
                 }
@@ -116,10 +117,12 @@ public class Board {
                 {
 
                     square.pieceType = -12;
+                    square.piece = new Rook(row, file, -12);
                 }
                 else if(row == 8 && file == 2 || row == 8 && file == 7)
                 {
                     square.pieceType = -13;
+                    square.piece = new Knight(row, file, -13);
 
                 }
                 else if(row == 8 && file == 3 || row == 8 && file == 6)
@@ -138,6 +141,8 @@ public class Board {
                 else if(row == 8 && file == 5)
                 {
                     square.pieceType = -16;
+                    square.piece = new King(row, file, -16);
+                    
                 }
                 
                 board.add(square);
@@ -158,8 +163,6 @@ public class Board {
         
         int row = Integer.parseInt(String.valueOf(input.charAt(1)));
         
-        
-        
         Coordinate pair = new Coordinate(file, row);
         
         
@@ -178,6 +181,39 @@ public class Board {
     }
     
     
+    public void promotion(int promotionType, Coordinate coordinate)
+    {
+        int index = getSquareIndex(coordinate.file, coordinate.row);
+        Square square = board.get(index);
+        
+        int colourFlipper = 1;
+        if(square.pieceType < 0) colourFlipper = -1;
+        
+        
+        switch (promotionType) {
+        case 1 -> {
+            square.pieceType = 15*colourFlipper;
+            square.piece = new Queen(coordinate.file, coordinate.row, square.pieceType);
+            }
+        case 2 -> {
+            square.pieceType = 12*colourFlipper;
+            square.piece = new Rook(coordinate.file, coordinate.row, square.pieceType);
+            }
+        case 3 -> {
+            square.pieceType = 13*colourFlipper;
+            square.piece = new Knight(coordinate.file, coordinate.row, square.pieceType);
+            }
+        case 4 -> {
+            square.pieceType = 14*colourFlipper;
+            square.piece = new Bishop(coordinate.file, coordinate.row, square.pieceType);
+            }
+        default -> // This should never happen due to input validation
+            System.out.println("Invalid promotion choice");
+    }
+        // Handle rook promotion
+        // Handle knight promotion
+        // Handle bishop promotion
+            }
     
     private int getSquareIndex(int file, int row) //Mathematical sequence to determine the index of a square when given coordinates
     {
@@ -197,35 +233,7 @@ public class Board {
                 
     }
     
-    public Piece enPassant(Coordinate old_coordinates, Coordinate new_coordinates) 
-    {
-        
-                
-        int old_index = getSquareIndex(old_coordinates.file, old_coordinates.row);
-        int new_index = getSquareIndex(new_coordinates.file, new_coordinates.row);
-       
-                
-        int pieceType = board.get(old_index).pieceType;
-        Piece piece = board.get(old_index).piece;
-        
-        Piece victim = board.get(new_index).piece;
-
-                
-        boolean white = pieceType > 0;
-        
-        int direction = 1;
-        if(!white) direction = -1;
-
-        
-        int victimIndex = getSquareIndex(new_coordinates.file, new_coordinates.row + direction);
-        
-        board.get(old_index).changePiece(0, null);
-        board.get(victimIndex).changePiece(0, null);
-        board.get(new_index).changePiece(pieceType, piece);
-        
-        return victim;
- 
-    }
+    
 
     public Piece movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
     {
