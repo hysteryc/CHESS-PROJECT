@@ -17,18 +17,14 @@ public class WinCondition
     public boolean inCheck(Board board, boolean isWhite)
     {
         Coordinate kingPosition = findKing(board, isWhite);
-        for(int row = 0; row < 8; row++)
+        for(Square square : board.getSquares())
         {
-            for(int file = 0; file < 8; file++)
+            if(square.piece != null)
             {
-                Coordinate coordinate = new Coordinate(row, file);
-                Piece piece = board.getPiece(coordinate);
-                if(piece != null && piece.pieceType > 0 != isWhite)
+                Piece attacker = square.piece;
+                if((isWhite && attacker.pieceType < 0) || (!isWhite && attacker.pieceType > 0))
                 {
-                    boolean attackable = isWhite
-                        ? piece.validMove(board, kingPosition, coordinate)
-                        : piece.validMove(board, kingPosition, coordinate);        
-                    if(attackable)
+                    if(attacker.validMove(board, kingPosition, new Coordinate(square.row, square.file)))
                     {
                         return true;
                     }
@@ -46,33 +42,36 @@ public class WinCondition
             return false;
         }
 
-        for (int row = 0; row < 8; row++) 
+        for (int row = 1; row <= 8; row++) 
         {
-            for (int file = 0; file < 8; file++) 
+            for (int file = 1; file <= 8; file++) 
             {
-                Coordinate origin = new Coordinate(row, file);
-                Piece piece = board.getPiece(origin);
+                Square square = board.getSquare(file, row);
+                Piece piece = square.piece;
 
-                if (piece != null && piece.pieceType > 0 == isWhite) 
+                if (piece != null && ((isWhite && piece.pieceType > 0) || (!isWhite && piece.pieceType < 0))) 
                 {
-                    for (int toRow = 0; toRow < 8; toRow++) 
+                    Coordinate origin = new Coordinate(row, file);
+
+                    for (int destRow = 1; destRow <= 8; destRow++) 
                     {
-                        for (int toFile = 0; toFile < 8; toFile++) 
+                        for (int destFile = 1; destFile <= 8; destFile++) 
                         {
-                            Coordinate destination = new Coordinate(toRow, toFile);
+                            Coordinate destination = new Coordinate(destRow, destFile);
 
-                            boolean valid = isWhite
-                                ? piece.validMove(board, destination, origin)
-                                : piece.validMove(board, destination, origin);
-
-                            if (valid) 
+                            if (piece.validMove(board, destination, origin)) 
                             {
-                                Board simulate = board.copy(); 
-                                simulate.movePiece(origin, destination);
-                            
-                                if (!inCheck(simulate, isWhite)) 
+                                Piece captured = board.getPiece(destination);
+                                board.movePiece(origin, destination);
+                                boolean stillInCheck = inCheck(board, isWhite);
+                                board.movePiece(destination, origin);
+                                if (captured != null) 
                                 {
-                                    return false; 
+                                    board.placePiece(captured, destination);
+                                }
+                                if (!stillInCheck) 
+                                {
+                                return false;
                                 }
                             }
                         }
@@ -86,15 +85,15 @@ public class WinCondition
     // find king on board.
     private Coordinate findKing(Board board, boolean isWhite)
     {
-        for(int row = 0; row < 8; row++)
+        for(int row = 1; row <= 8; row++)
         {
-            for(int file = 0; file < 8; file++)
+            for(int file = 1; file <= 8; file++)
             {
-                Coordinate king = new Coordinate(row, file);
-                Piece piece = board.getPiece(king);
-                if(piece instanceof King && piece.pieceType > 0 == isWhite)
+                Coordinate current = new Coordinate(row, file);
+                Piece piece = board.getPiece(current);
+                if(piece instanceof King && ((isWhite && piece.pieceType > 0) || (!isWhite && piece.pieceType < 0)))
                 {
-                    return king;
+                    return current;
                 }
             }
         }
