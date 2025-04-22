@@ -62,13 +62,13 @@ public class Interface {
     
     private Board run(Board board, boolean play)
     {
-    
+        WinCondition win = new WinCondition();
         while(play) {
             try {
                 // Display board and turn info
                 board.drawBoard();
                 System.out.println("\n" + (whiteTurn ? "WHITE" : "BLACK") + "'S TURN");
-
+                
                 // Get piece position
                 System.out.print("Select Piece: ");
                 String position = scanner.next().trim();
@@ -108,18 +108,30 @@ public class Interface {
                     System.out.println("Invalid move for " + piece.getClass().getSimpleName());
                     continue;
                 }
-
                 
                 Piece capture = board.movePiece(oldCoordinate, newCoordinate);
                 if((newCoordinate.row == 8 || newCoordinate.row == 1) && piece instanceof Pawn) promotion(board, newCoordinate);
                 whiteTurn = !whiteTurn;
-
-                if (capture != null) System.out.println("Captured " + capture.getClass().getSimpleName() + "!");
                 
+                if (win.inCheck(board, whiteTurn)) 
+                {
+                    if (win.isCheckmate(board, whiteTurn)) 
+                    {
+                        board.drawBoard();
+                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECKMATE!");
+                        System.out.println((whiteTurn ? "BLACK" : "WHITE") + " WINS!");
+                        break; 
+                    } 
+                    else 
+                    {
+                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECK!");
+                    }
+                }
+                if (capture != null) System.out.println("Captured " + capture.getClass().getSimpleName() + "!");
 
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
-                scanner.nextLine(); // Clear scanner buffer
+                scanner.nextLine(); 
             } catch (NullPointerException e) {
                 System.out.println("Error: Invalid board position");
                 scanner.nextLine();
