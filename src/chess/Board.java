@@ -38,12 +38,10 @@ import java.util.ArrayList;
     -16 = black king
     */
 
-public class Board {
+public class Board 
+{
     
     ArrayList<Square> board = new ArrayList<>();
-    ArrayList<Coordinate> illegalBlackKingMoves = new ArrayList<>();
-    ArrayList<Coordinate> illegalWhiteKingMoves = new ArrayList<>();
-
     
     public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
     {
@@ -152,12 +150,13 @@ public class Board {
         }
     }
     
-    public ArrayList<Square> getBoard() 
+    // Could use this or Maybe when we update to GUI use an iterator (iterable)
+    public ArrayList<Square> getSquares() 
     {
         return board;
     }
     
-    public Coordinate translateInput(String input) // Translates a string input to int coordinates
+    public Coordinate translateInput(String input) 
     {
         int file = Integer.valueOf(Character.toLowerCase(input.charAt(0))) - 96;
         
@@ -179,7 +178,6 @@ public class Board {
         return square.pieceType;
 
     }
-    
     
     public void promotion(int promotionType, Coordinate coordinate)
     {
@@ -233,7 +231,15 @@ public class Board {
                 
     }
     
+    public Square getSquare(int file, int row) 
+    {
+        return board.get(getSquareIndex(file, row));
+    }
     
+    public void placePiece(Piece piece, Coordinate coord) 
+    {
+        getSquare(coord.file, coord.row).piece = piece;
+    }
 
     public Piece movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
     {
@@ -256,67 +262,11 @@ public class Board {
         
     }
     
-    public Board copy() 
-    {
-        Board clone = new Board();
-
-        for (int row = 0; row < 8; row++) 
-        {
-            for (int file = 0; file < 8; file++) 
-            {
-                Coordinate coord = new Coordinate(row, file);
-                Piece piece = this.getPiece(coord);
-
-            if (piece != null) 
-            {
-                Piece newPiece = clonePiece(piece);
-                clone.setPiece(coord, newPiece);
-            }
-        }
-    }
-
-        return clone;
-    }
-    
     public void setPiece(Coordinate coord, Piece piece) 
     {
         int index = getSquareIndex(coord.file, coord.row);
         Square square = board.get(index);
         square.piece = piece;  
-    }
-    
-    private Piece clonePiece(Piece piece) 
-    {
-        int row = piece.getRow();
-        int file = piece.getFile();
-        int type = piece.pieceType;
-
-        if(piece instanceof Pawn) 
-        {
-            return new Pawn(row, file, type);
-        } 
-        else if(piece instanceof Rook) 
-        {
-            return new Rook(row, file, type);
-        }
-        else if(piece instanceof Knight) 
-        {
-            return new Knight(row, file, type);
-        } 
-        else if(piece instanceof Bishop) 
-        {
-            return new Bishop(row, file, type);
-        } 
-        else if(piece instanceof Queen) 
-        {
-            return new Queen(row, file, type);
-        } 
-        else if(piece instanceof King) 
-        {
-            return new King(row, file, type);
-        }
-
-        return null;
     }
     
     public void drawBoard() //turns the collection of numbers into physical representation
