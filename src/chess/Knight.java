@@ -20,6 +20,9 @@ public class Knight extends Piece
     @Override
     public boolean validMove(Board board, Coordinate destination, Coordinate origin)
     {
+        
+        
+        
         if(!withinBounds(destination))
         {
             return false;
@@ -34,10 +37,17 @@ public class Knight extends Piece
         int deltaRow = Math.abs(destination.row - origin.row);
         boolean lShapedMove = ((Math.abs(deltaRow) == 2 && Math.abs(deltaFile) == 1) || (Math.abs(deltaRow) == 1 && Math.abs(deltaFile) == 2));
         
+        System.out.println("\nKnight: " + pieceType);
+        System.out.println("deltaFile:" + deltaFile);
+        System.out.println("deltaRow: " + deltaRow);
+        
         if(!lShapedMove)
         {
             return false;
         }
+        
+        
+        
         
         int destinationPiece = board.checkSquare(destination);
         

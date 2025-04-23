@@ -17,6 +17,15 @@ public class Coordinate {
         this.file = file;
         this.row = row;
     }
-
+    
+    public void print()
+    {
+        System.out.println(file + ", " + row);
+    }
+    
+    public boolean withinBounds()
+    {
+        return (file <= 8 && file >= 1) && (row <= 8 && row >= 1);
+    }
 }
 

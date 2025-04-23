@@ -55,7 +55,8 @@ public class Queen extends Piece
 
         int deltaFile = destination.file - origin.file;
         int deltaRow = destination.row - origin.row;
-
+        
+        System.out.println("\nQueen: " + pieceType);
         System.out.println("deltaFile:" + deltaFile);
         System.out.println("deltaRow: " + deltaRow);
         

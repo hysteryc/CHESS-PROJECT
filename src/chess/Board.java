@@ -42,7 +42,10 @@ public class Board
 {
     
     ArrayList<Square> board = new ArrayList<>();
-    
+    ArrayList<Piece> white = new ArrayList<>();
+    ArrayList<Piece> black = new ArrayList<>();
+    WinCondition winner = new WinCondition();
+            
     public Board() //Every position is assigned a tile colour (tileValue) and (if applicable) a piece value
     {
         int index = 0;
@@ -69,13 +72,15 @@ public class Board
                 if(row == 7)  //piece assigning
                 {
                     square.pieceType = -11;
-                    square.piece = new Pawn(row, file, -11);   
+                    square.piece = new Pawn(row, file, -11); 
+                    black.add(square.piece); 
                     
                 }
                 else if(row == 2)
                 {
                     square.pieceType = 11;
                     square.piece = new Pawn(row, file, 11);
+                    white.add(square.piece); 
                     
                 }
                 else if(row == 1 && file == 1 || row == 1 && file == 8)
@@ -83,6 +88,7 @@ public class Board
 
                     square.pieceType = 12;
                     square.piece = new Rook(row, file, 12);
+                    white.add(square.piece); 
                    
                 }
                 else if(row == 1 && file == 2 || row == 1 && file == 7)
@@ -90,12 +96,13 @@ public class Board
 
                     square.pieceType = 13;
                     square.piece = new Knight(row, file, 13);
-                    
+                    white.add(square.piece); 
                 }
                 else if(row == 1 && file == 3 || row == 1 && file == 6)
                 {
                     square.pieceType = 14;
                     square.piece = new Bishop(row, file, 14);
+                    white.add(square.piece); 
                   
                 }
                 else if(row == 1 && file == 4)
@@ -103,12 +110,13 @@ public class Board
 
                     square.pieceType = 15;
                     square.piece = new Queen(row, file, 15);
-
+                    white.add(square.piece); 
                 }
                 else if(row == 1 && file == 5)
                 {
                     square.piece = new King(row, file, 16);
                     square.pieceType = 16;
+                    white.add(square.piece); 
 
                 }
                 else if(row == 8 && file == 1 || row == 8 && file == 8)
@@ -116,11 +124,13 @@ public class Board
 
                     square.pieceType = -12;
                     square.piece = new Rook(row, file, -12);
+                    black.add(square.piece);
                 }
                 else if(row == 8 && file == 2 || row == 8 && file == 7)
                 {
                     square.pieceType = -13;
                     square.piece = new Knight(row, file, -13);
+                    black.add(square.piece);
 
                 }
                 else if(row == 8 && file == 3 || row == 8 && file == 6)
@@ -128,6 +138,7 @@ public class Board
 
                     square.pieceType = -14;
                     square.piece = new Bishop(row, file, -14);
+                    black.add(square.piece);
 
                 }
                 else if(row == 8 && file == 4)
@@ -135,12 +146,13 @@ public class Board
 
                     square.pieceType = -15;
                     square.piece = new Queen(row, file, -15);
+                    black.add(square.piece);
                 }
                 else if(row == 8 && file == 5)
                 {
                     square.pieceType = -16;
                     square.piece = new King(row, file, -16);
-                    
+                    black.add(square.piece);
                 }
                 
                 board.add(square);
@@ -154,6 +166,21 @@ public class Board
     public ArrayList<Square> getSquares() 
     {
         return board;
+    }
+    
+    public void printPieces() 
+    {
+        System.out.println("WHITE:");
+        for(Piece item : white)
+        {
+            System.out.println("Piece type: " + item.pieceType + " | Material: "+ item.material + " | Position: " + item.file + ", " + item.row);
+        }
+        
+        System.out.println("\n\nBlack:");
+        for(Piece item : black)
+        {
+            System.out.println("Piece type: " + item.pieceType + " | Material: "+ item.material + " | Position: " + item.file + ", " + item.row);
+        }
     }
     
     public Coordinate translateInput(String input) 
@@ -241,32 +268,69 @@ public class Board
         getSquare(coord.file, coord.row).piece = piece;
     }
 
-    public Piece movePiece(Coordinate old_coordinates, Coordinate new_coordinates) 
-    {
-        
-                
-        int old_index = getSquareIndex(old_coordinates.file, old_coordinates.row);
-        int new_index = getSquareIndex(new_coordinates.file, new_coordinates.row);
-          
+    public Piece movePiece(Coordinate oldCoord, Coordinate newCoord) {
+    // Validate indices first
+    int oldIndex = getSquareIndex(oldCoord.file, oldCoord.row);
+    int newIndex = getSquareIndex(newCoord.file, newCoord.row);
+    
+    // Store move state for potential undo
+    Piece movingPiece = board.get(oldIndex).piece;
+    Piece victim = board.get(newIndex).piece;
+    
+    // Execute move
+    if (victim != null) {
+        removePiece(victim);  // Remove victim from active pieces list
+    }
+    board.get(oldIndex).changePiece(0, null);
+    board.get(newIndex).changePiece(movingPiece.pieceType, movingPiece);
+    
+    updatePiece(oldCoord, newCoord, movingPiece.pieceType > 0);
+    
+    return victim;
+}
 
-
-        int pieceType = board.get(old_index).pieceType;
-        Piece piece = board.get(old_index).piece;
-        Piece victim = board.get(new_index).piece;
-        
-        board.get(old_index).changePiece(0, null);
-        board.get(new_index).changePiece(pieceType, piece);
-        
-        return victim;
-       
-        
+public void undoMovePiece(Coordinate prevCoord, Coordinate currCoord, Piece victim) {
+    int prevIndex = getSquareIndex(prevCoord.file, prevCoord.row);
+    int currIndex = getSquareIndex(currCoord.file, currCoord.row);
+    
+    Piece movingPiece = board.get(currIndex).piece;
+    
+    // Restore original state
+    board.get(prevIndex).changePiece(movingPiece.pieceType, movingPiece);
+    
+    if (victim != null) {
+        board.get(currIndex).changePiece(victim.pieceType, victim);
+        (victim.pieceType > 0 ? white : black).add(victim);  // Revive victim
+    } else {
+        board.get(currIndex).changePiece(0, null);
     }
     
-    public void setPiece(Coordinate coord, Piece piece) 
+    updatePiece(currCoord, prevCoord, movingPiece.pieceType > 0);
+}
+
+    
+    
+    public void removePiece(Piece piece) {
+   
+    ArrayList<Piece> list = piece.pieceType > 0 ? white : black;
+    if (list.remove(piece)) {
+        System.out.println("REMOVED: " + piece.pieceType);
+    }
+
+    
+    }
+    
+    public void updatePiece(Coordinate pieceCoordinate, Coordinate newCoordinate, boolean isWhite)
     {
-        int index = getSquareIndex(coord.file, coord.row);
-        Square square = board.get(index);
-        square.piece = piece;  
+        for(Piece item : (isWhite ? white : black))
+        {
+        if(pieceCoordinate.file == item.file && pieceCoordinate.row == item.row) 
+        {
+            item.file = newCoordinate.file;
+            item.row = newCoordinate.row;
+            System.out.println("UPDATED");
+        }
+        }
     }
     
     public void drawBoard() //turns the collection of numbers into physical representation
@@ -310,4 +374,5 @@ public class Board
             System.out.println("     |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |");
             System.out.println("     |     |     |     |     |     |     |     |     |");
     }
+    
 }

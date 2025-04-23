@@ -27,7 +27,30 @@ public class Pawn extends Piece
     }
     
     
-    
+   public boolean attacking(Board board, Coordinate targetCoordinate, Coordinate currentCoordinate)
+   {
+        int colourPerspective = 1;
+        int deltaFile = targetCoordinate.file - currentCoordinate.file;
+        int deltaRow = targetCoordinate.row - currentCoordinate.row;
+
+        if (pieceType < 0) {
+            colourPerspective = -1;
+            firstMove = currentCoordinate.row == 7;
+        }
+
+        // Only allow attacking diagonally
+        if (deltaRow == 1 * colourPerspective && Math.abs(deltaFile) == 1) {
+            int destinationPiece = board.checkSquare(targetCoordinate);
+
+            // Check if the piece at the target is of opposite color
+            if (colourPerspective == -1 && destinationPiece > 0) return true;
+            if (colourPerspective == 1 && destinationPiece < 0) return true;
+        }
+
+        return false;
+    }
+
+
     @Override
     public boolean validMove(Board board, Coordinate destination, Coordinate origin) { 
     // Basic validation check    
@@ -47,6 +70,7 @@ public class Pawn extends Piece
     int deltaFile = destination.file - origin.file;
     int deltaRow = destination.row - origin.row;
     
+    System.out.println("\nPawn: " + pieceType);
     System.out.println("deltaFile: " + deltaFile);
     System.out.println("deltaRow: " + deltaRow);
 

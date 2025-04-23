@@ -19,6 +19,7 @@ public class Rook extends Piece
     
     private boolean pathClear(Board board, Coordinate destination, Coordinate origin, Coordinate movement)
     {   
+        System.out.println("Pawn: " + pieceType);
         System.out.println("destination: " +  destination.file + ", " + destination.row);
         
         
@@ -64,6 +65,10 @@ public class Rook extends Piece
         
         int deltaFile = destination.file - origin.file;
         int deltaRow = destination.row - origin.row;
+        
+        System.out.println("\nRook: " + pieceType);
+        System.out.println("deltaFile:" + deltaFile);
+        System.out.println("deltaRow: " + deltaRow);
         
         if(deltaRow != 0 && deltaFile != 0)
         {

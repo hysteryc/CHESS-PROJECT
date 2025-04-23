@@ -14,6 +14,9 @@ import java.util.Scanner;
 public class Interface {
     boolean whiteTurn = true;
     boolean possible = false;
+    boolean check;
+    Piece lastMoved = null;
+            
     Scanner scanner = new Scanner(System.in);
     
     public Board run(Board board)
@@ -66,7 +69,14 @@ public class Interface {
         while(play) {
             try {
                 // Display board and turn info
+                
+                
+                
+                board.printPieces();
                 board.drawBoard();
+                
+                
+                
                 System.out.println("\n" + (whiteTurn ? "WHITE" : "BLACK") + "'S TURN");
                 
                 // Get piece position
@@ -101,6 +111,26 @@ public class Interface {
                     System.out.println("That's not your piece!");
                     continue;
                 }
+                
+                if(check) 
+                {
+                    
+                    
+                    board.movePiece(oldCoordinate, newCoordinate);
+                    
+                    check = win.check(board, whiteTurn);
+                    
+                    if(check) 
+                    {
+                        System.out.println("You are in check");
+                        board.movePiece(newCoordinate, oldCoordinate);
+                        continue;
+                    }
+                    else 
+                    {      
+                        board.movePiece(newCoordinate, oldCoordinate);
+                    }
+                }
 
                 
                 if (!piece.validMove(board, newCoordinate, oldCoordinate))
@@ -110,23 +140,36 @@ public class Interface {
                 }
                 
                 Piece capture = board.movePiece(oldCoordinate, newCoordinate);
+                
+                lastMoved = piece;
+                        
                 if((newCoordinate.row == 8 || newCoordinate.row == 1) && piece instanceof Pawn) promotion(board, newCoordinate);
                 whiteTurn = !whiteTurn;
                 
-                if (win.inCheck(board, whiteTurn)) 
+                check = win.check(board, whiteTurn);
+                
+                if(check)
                 {
-                    if (win.isCheckmate(board, whiteTurn)) 
-                    {
-                        board.drawBoard();
-                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECKMATE!");
-                        System.out.println((whiteTurn ? "BLACK" : "WHITE") + " WINS!");
-                        break; 
-                    } 
-                    else 
-                    {
-                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECK!");
-                    }
+                    if(win.checkmate(board, lastMoved)) break;
                 }
+                
+                System.out.println((check ? "YOU ARE IN CHECK" : "YOU ARE NOT IN CHECK"));
+                
+//                if (win.inCheck(board, whiteTurn)) 
+//                {
+//                    if (win.isCheckmate(board, whiteTurn)) 
+//                    {
+//                        board.drawBoard();
+//                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECKMATE!");
+//                        System.out.println((whiteTurn ? "BLACK" : "WHITE") + " WINS!");
+//                        break; 
+//                    } 
+//                    else 
+//                    {
+//                        System.out.println((whiteTurn ? "WHITE" : "BLACK") + " is in CHECK!");
+//                    }
+//                }
+                
                 if (capture != null) System.out.println("Captured " + capture.getClass().getSimpleName() + "!");
 
             } catch (IllegalArgumentException e) {
@@ -142,6 +185,7 @@ public class Interface {
             }
         }
         scanner.close();
+        System.out.println("CHECKMATE CHECKMATE CHECKMATE");
     return board;
     }
 }

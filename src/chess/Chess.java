@@ -24,6 +24,7 @@ public class Chess {
         
         game.run(board);
         
+        board.drawBoard();
         
         
         //save.Save("ChessFiles/BoardData.txt");
