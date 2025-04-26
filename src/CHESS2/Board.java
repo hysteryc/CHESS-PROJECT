@@ -32,7 +32,7 @@ public class Board
         initializeBoard();
     }
     
-    // Initilizing the Board at the Beginning of a new Game (STandard Positions for classic Chess
+    // Initilizing the Board at the Beginning of a new Game (Standard Positions for classic Chess
     public void initializeBoard() 
     {
         for (int row = 0; row < 8; row++) 
@@ -72,8 +72,8 @@ public class Board
             new Rook(false),
             new Knight(false),
             new Bishop(false),
-            new Queen(false),
             new King(false),
+            new Queen(false),
             new Bishop(false),
             new Knight(false),
             new Rook(false)
@@ -161,16 +161,17 @@ public class Board
             if (piece.isOpponent(targetPiece)) 
             {
                 System.out.println(piece.getSymbol() + " captures " + targetPiece.getSymbol());
-                targetPiece.setCurrentSquare(null);
                 if (whiteTurn) 
                 {
                     blackPieces.remove(targetPiece);
+                    targetPiece.setCurrentSquare(null);
                     capturedBlack.add(targetPiece);
                     FileIO.saveCapturedBlack(capturedBlack);  // Autosave after capture
                 } 
                 else 
                 {
                     whitePieces.remove(targetPiece);
+                    targetPiece.setCurrentSquare(null);
                     capturedWhite.add(targetPiece);
                     FileIO.saveCapturedWhite(capturedWhite);  // Autosave after capture
                 }
@@ -227,23 +228,20 @@ public class Board
     }
     
     // Check if king has been captures (Substitute for Check and Checkmate)
-    public boolean isKingCaptured(boolean whitePlayer) 
+    public boolean isKingCaptured(boolean isWhite) 
     {
-        King king = getKing(whitePlayer);
-        return king == null || king.getCurrentSquare() == null;
-    }
-    
-    // Win Condition or End Game Condition
-    public void checkVictory() 
+    for (int row = 0; row < 8; row++) 
     {
-        if (isKingCaptured(true)) 
+        for (int col = 0; col < 8; col++) 
         {
-            System.out.println("Black wins!");
-        } 
-        else if (isKingCaptured(false)) 
-        {
-            System.out.println("White wins!");
+            Piece piece = board[row][col].getPiece();
+            if (piece != null && piece instanceof King && piece.isWhite() == isWhite) 
+            {
+                return false; 
+            }
         }
+    }
+    return true; 
     }
     
     // Sets the Current Turn (Mainly for Loading a Game)
@@ -261,8 +259,7 @@ public class Board
     // Check if a Square on the Board is Empty
     public boolean isSquareEmpty(int row, int col) 
     {
-    // Adjust for 1-indexed rows and columns
-        return board[row][col].getPiece() == null;  // Returns true if no piece is present at the given square
+        return board[row][col].getPiece() == null;  
     }
     
     // Check whether a piece is on opposing team
