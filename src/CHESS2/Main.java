@@ -1,12 +1,24 @@
 package CHESS2;
 
+
+
+
+
 import java.util.Scanner;
 
-public class Main {
+public class Main 
+    {
+    Board board = new Board();
+    Scanner scanner = new Scanner(System.in);
+    
+    
+    
+    
     
     //Main gameplay Loop
     public static void main(String[] args) 
     {
+        Piece lastMoved = null;
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
         FileIO.clearCapturedFiles(); 
@@ -21,35 +33,44 @@ public class Main {
         } 
         else 
         {
-            board.initializeBoard();  
+            board.initializeBoard();
+            
+           
         }
 
         while (true) 
         {
+            
             System.out.println("");
+            
             board.drawBoard();   
             
-            if (board.isKingCaptured(true)) 
+            if(board.check())
             {
-                System.out.println("White's king has been captured. Black wins!");
-                break;
-            } 
-            else if (board.isKingCaptured(false)) 
-            {
-                System.out.println("Black's king has been captured. White wins!");
-                break;
+                if(lastMoved != null) 
+                {
+                    
+                    if(board.checkmate(lastMoved)) 
+                    {
+                        System.out.println("\n\n\n");
+                        board.drawBoard();
+                        System.out.println("\n=== NO BLOCKS OR ESCAPES FOUND - CHECKMATE ===");
+                        break;
+                    }
+                }
             }
 
-            System.out.println("Current turn: " + (board.whiteTurn ? "White" : "Black"));
+
+            System.out.println("\nCurrent turn: " + (board.whiteTurn ? "White" : "Black"));
             System.out.println("Enter your move (e.g., 'e2 e4'):");
             System.out.println("'capturedblack' to display Captured Black Pieces");
             System.out.println("'capturedwhite' to display Captured White Pieces");
             System.out.println("'save' to save the game");
-            System.out.println("'quit' to exit the game");
-            System.out.println("Enter Input: ");
+            System.out.println("'exit' to exit the game");
+            System.out.println("\nEnter Input: ");
             String input = scanner.nextLine();
             
-            if (input.equalsIgnoreCase("quit")) 
+            if (input.equalsIgnoreCase("exit")) 
             {
                 System.out.println("Exiting the game.");
                 break;
@@ -81,12 +102,28 @@ public class Main {
             String[] move = input.split(" ");
             Coordinate from = parseCoordinate(move[0]);
             Coordinate to = parseCoordinate(move[1]);
-
+            
+            
+            
             if (!board.movePiece(from, to)) 
             {
                 System.out.println("Invalid move. Try again.");
                 continue;
             }
+            
+            lastMoved = board.getPieceAt(to.getRow(), to.getCol());
+            
+            
+            King whiteKing = board.getKing(board.isWhiteTurn());
+            Square white = whiteKing.getCurrentSquare();
+            
+            
+       
+                
+            
+           
+ 
+                    
         }
 
         scanner.close();

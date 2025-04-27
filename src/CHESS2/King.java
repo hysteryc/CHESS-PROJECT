@@ -19,6 +19,10 @@ public class King extends Piece {
     @Override
     public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Board board) 
     {
+         Piece target = (board.getPieceAt(endRow, endCol));
+        if (target != null && target.isWhite() == this.isWhite()) {
+        return false;
+    }
         int rowDiff = Math.abs(startRow - endRow);
         int colDiff = Math.abs(startCol - endCol);
         return rowDiff <= 1 && colDiff <= 1;  
@@ -45,4 +49,6 @@ public class King extends Piece {
         }
         return legalMoves;
     }
+    
+    
 }

@@ -54,7 +54,7 @@ public class Square
     // toString for Empty Square
     public String toString() 
     {
-        return (piece != null) ? piece.getSymbol() : ".";
+        return (piece != null) ? piece.getSymbol() : "▭";
     }
     
 }
