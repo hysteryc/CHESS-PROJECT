@@ -210,6 +210,7 @@ public class Board
     
     public boolean check()
     {
+        //This function uses the 'checkAttackers' function to see if we're in check 
         King king = getKing(whiteTurn);
         Square kingSquare = king.getCurrentSquare();
         Coordinate kingPosition = new Coordinate(kingSquare.getRow(), kingSquare.getCol());
@@ -224,16 +225,19 @@ public class Board
     
    
     public boolean checkmate(Piece attacker) {
+    
+    //There are two conditions for a king to be checkmated, this function checks both of them    
+        
     King king = getKing(whiteTurn);
     Coordinate kingPos = new Coordinate(king.getCurrentSquare().getRow(), 
                                       king.getCurrentSquare().getCol());
 
-    // 1. Check if piece can block or capturing attacking piece 
-    ArrayList<Coordinate> attackPath = getPath(
+    // 1. Check if piece can block or capture the attacking piece 
+    ArrayList<Coordinate> attackPath = getPath( 
         new Coordinate(attacker.getCurrentSquare().getRow(), 
         attacker.getCurrentSquare().getCol()),
         attacker,
-        kingPos
+        kingPos // gets the path of the attacker coordinates to the king coordinates
     );
     
     attackPath.add(new Coordinate(attacker.getCurrentSquare().getRow(),
@@ -256,29 +260,32 @@ public class Board
         for (Coordinate blockSquare : attackPath) { //Check if ally can interupt the attackers path
             if (ally.isValidMove(allyPos.getRow(), allyPos.getCol(),
                                blockSquare.getRow(), blockSquare.getCol(), this)) {
-                // Simulate move
+                
+
+                // Simulate the move to see if king is still in check after move takes place
                 Piece original = board[blockSquare.getRow()][blockSquare.getCol()].getPiece();
                 makeTempMove(ally, allyPos, blockSquare);
                 
                 boolean stillInCheck = checkAttackers(this, kingPos, 
                                                    whiteTurn ? blackPieces : whitePieces) > 0;
                 
-                undoTempMove(ally, allyPos, blockSquare, original); //Undo move
+                undoTempMove(ally, allyPos, blockSquare, original); 
+                //Undo move, we are just checking for checkmate not actually going through with the move
                 
                 if (!stillInCheck) {
-                    foundBlock = true;
+                    foundBlock = true; // return if piece succesfully blocked or captured
                 }
             }
         }
     }
 
-    if (foundBlock) { // If theres a blocker then no checkmate
+    if (foundBlock) { // If theres a blocker or we can capture then no checkmate
         return false;
     }
 
     // 2. Check king can escape by moving by checking if every possible move is valid
     for (int rowDelta = -1; rowDelta <= 1; rowDelta++) {
-        for (int colDelta = -1; colDelta <= 1; colDelta++) {
+        for (int colDelta = -1; colDelta <= 1; colDelta++) { // every possible move 
             if (rowDelta == 0 && colDelta == 0) continue;
             
             int newRow = kingPos.getRow() + rowDelta;
@@ -291,16 +298,18 @@ public class Board
                     continue;
                 }
                 
-                if (king.isValidMove(kingPos.getRow(), kingPos.getCol(),
+                if (king.isValidMove(kingPos.getRow(), kingPos.getCol(), // Checks if move is valid
                                    newRow, newCol, this)) {
                     if (checkAttackers(this, new Coordinate(newRow, newCol),
                                      whiteTurn ? blackPieces : whitePieces) == 0) {
-                        return false;
+                        return false; // return if king can escape
                     }
                 }
             }
         }
     }
+    
+    // No way to move out of or prevent checkmate, checkamte is returned
     
     return true;
 }   
@@ -319,47 +328,43 @@ public class Board
     
     public int checkAttackers(Board board, Coordinate kingPosition, ArrayList<Piece> enemyList) {
     
-    int startRow = kingPosition.getRow();
-    int startCol = kingPosition.getCol();
-    int attackers = 0;
-    
-    // Get enemy pieces that are still on the board
-    
-    int first16 = 0;
-    
-    for(Piece enemy : enemyList) {
-        if(first16 == 16)
-        {
-            Square enemySquare = enemy.getCurrentSquare();
+        
+        // This function is desinged to go through every enemy piece and check if they can attack the king
+        int startRow = kingPosition.getRow();
+        int startCol = kingPosition.getCol();
+        int attackers = 0;
+        int first16 = 0; 
 
-            // Skip captured pieces (not on board)
-            if(enemySquare == null) {
-                continue;
+        for(Piece enemy : enemyList) {
+            if(first16 == 16) 
+            {
+                Square enemySquare = enemy.getCurrentSquare();
+
+
+                if(enemySquare == null) {
+                    continue;
+                }
+
+                if(enemy.isValidMove(
+                    enemySquare.getRow(),
+                    enemySquare.getCol(),
+                    startRow,
+                    startCol,
+                    board)) {
+
+                    attackers++;
+                    System.out.println("\nSimulating move...");
+                    System.out.println(enemy.getSymbol() + " Can Attack Your King\n");
+                }
             }
-
-
-            // Debug print - remove in production
-           
-            if(enemy.isValidMove(
-                enemySquare.getRow(),
-                enemySquare.getCol(),
-                startRow,
-                startCol,
-                board)) {
-
-                attackers++;
-                System.out.println("\nSimulating move...");
-                System.out.println(enemy.getSymbol() + " Can Attack Your King\n");
+            else
+            {
+                first16++;
             }
         }
-        else
-        {
-            first16++;
-        }
+
+        return attackers;
     }
-    
-    return attackers;
-}
     
     // Moving a Piece
     public boolean movePiece(Coordinate from, Coordinate to) {
@@ -453,7 +458,7 @@ public class Board
     }
 
     // If we got here, the move is valid and doesn't leave king in check
-    // Now handle the capture for real (already done above, but need to save to file if needed)
+    // Now handle the capture for real (already done above, but need to save to file)
     if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) {
         System.out.println(piece.getSymbol() + " captures " + originalEndPiece.getSymbol());
         if (whiteTurn) {
