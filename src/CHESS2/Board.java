@@ -588,7 +588,7 @@ public class Board
         return null;
     }
     
-    public void addPiece(Piece piece)
+    public void addPieceToSide(Piece piece)
     {
         if(piece.isWhite())
         {

@@ -31,6 +31,7 @@ public class Main
         String loadInput = scanner.nextLine();
         if (loadInput.equalsIgnoreCase("yes")) 
         {
+            board.initializeBoard();
             FileIO.loadGame(board, board.getCapturedWhite(), board.getCapturedBlack());  
             System.out.println();
         } 

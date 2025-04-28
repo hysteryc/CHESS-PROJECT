@@ -106,7 +106,7 @@ public class FileIO
     //Saving the current state of the board to a txt file
     public static void saveGame(Board board, boolean whiteTurn, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack) 
     {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Resources/boardState.txt"))) 
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./ChessFiles/boardData.txt"))) 
         {
             bw.write("Turn: " + (whiteTurn ? "White" : "Black"));
             bw.newLine();
@@ -145,18 +145,21 @@ public class FileIO
                 bw.write(piece.getSymbol() + ",");
             }
             bw.newLine();
+            
             System.out.println("Game successfully saved.");
         } 
         catch (IOException e) 
         {
-            System.out.println("IO Exception");;
+            System.out.println("IO Exception");
         }
+        
+        
     }
     
     // Loading the Saved Board State from a txt file
     public static void loadGame(Board board, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack)
     {
-        try(BufferedReader br = new BufferedReader(new FileReader("./Resources/boardState.txt")))
+        try(BufferedReader br = new BufferedReader(new FileReader("./ChessFiles/boardData.txt")))
         {
             String line = br.readLine();
             if (line.contains("White")) 
