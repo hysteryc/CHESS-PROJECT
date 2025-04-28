@@ -20,7 +20,9 @@ public class Main
     {
         Piece lastMoved = null;
         Board board = new Board();
+        FileIO fileio = new FileIO();
         Scanner scanner = new Scanner(System.in);
+        
         FileIO.clearCapturedFiles(); 
 
         System.out.println("Welcome to Barebones Command Line Chess");
@@ -29,13 +31,12 @@ public class Main
         String loadInput = scanner.nextLine();
         if (loadInput.equalsIgnoreCase("yes")) 
         {
-            FileIO.loadGame(board.getBoard(), board.getCapturedWhite(), board.getCapturedBlack());  
+            FileIO.loadGame(board, board.getCapturedWhite(), board.getCapturedBlack());  
+            System.out.println();
         } 
         else 
         {
             board.initializeBoard();
-            
-           
         }
 
         while (true) 
@@ -59,7 +60,6 @@ public class Main
                     }
                 }
             }
-
 
             System.out.println("\nCurrent turn: " + (board.whiteTurn ? "White" : "Black"));
             System.out.println("Enter your move (e.g., 'e2 e4'):");
@@ -88,7 +88,7 @@ public class Main
             } 
             else if(input.equalsIgnoreCase("save")) 
             {
-                FileIO.saveGame(board.getBoard(), board.isWhiteTurn(), board.getCapturedWhite(), board.getCapturedBlack());
+                FileIO.saveGame(board, board.isWhiteTurn(), board.getCapturedWhite(), board.getCapturedBlack());
                 System.out.println("Game saved.");
                 continue;
             }
