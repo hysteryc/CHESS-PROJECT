@@ -97,66 +97,6 @@ public class Board
         return board;
     }
     
-    
-    public void promotion(Square square) 
-    {
-        Scanner scanner = new Scanner(System.in);
-        int choice = 0;
-        boolean validInput = false;
-
-        System.out.println("\nPROMOTION MENU");
-        System.out.println("1 - Queen");
-        System.out.println("2 - Rook");
-        System.out.println("3 - Knight");
-        System.out.println("4 - Bishop");
-
-        // Input validation loop
-        while (!validInput) {
-        try {
-            System.out.print("Choose promotion (1-4): ");
-            String input = scanner.next().trim();
-            
-            if (!input.matches("[1-4]")) {
-                throw new IllegalArgumentException("Please enter a number between 1 and 4");
-            }
-            
-            choice = Integer.parseInt(input);
-            validInput = true;
-            
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid input: " + e.getMessage());
-            scanner.nextLine(); 
-        } catch (Exception e) {
-            System.out.println("An unexpected error occurred: " + e.getMessage());
-            scanner.nextLine();
-        }
-    }
-    
-    // Promotion execution
-    Piece pawn = square.getPiece();
-    boolean colour = pawn.isWhite();
-    ArrayList<Piece> chosenColour = (colour ? whitePieces : blackPieces);
-    
-    // Remove the pawn first
-    chosenColour.remove(pawn);
-    
-    // Create and set the new promoted piece
-    Piece promotedPiece;
-    switch (choice) {
-        case 1 -> promotedPiece = new Queen(colour);
-        case 2 -> promotedPiece = new Rook(colour);
-        case 3 -> promotedPiece = new Knight(colour);
-        case 4 -> promotedPiece = new Bishop(colour);
-        default -> throw new IllegalStateException("Unexpected promotion choice");
-    }
-    
-    square.setPiece(promotedPiece);
-    promotedPiece.setCurrentSquare(square);  // Important for tracking position
-    chosenColour.add(promotedPiece);
-    
-    System.out.println("Pawn promoted to " + promotedPiece.getClass().getSimpleName());
-    }
-    
     // Draw the board in the console
     public void drawBoard() 
     {
@@ -371,6 +311,68 @@ public class Board
         return attackers;
     }
     
+    
+    
+    
+    public void promotion(Square square) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        int choice = 0;
+        boolean validInput = false;
+
+        System.out.println("\nPROMOTION MENU");
+        System.out.println("1 - Queen");
+        System.out.println("2 - Rook");
+        System.out.println("3 - Knight");
+        System.out.println("4 - Bishop");
+
+        // Input validation loop
+        while (!validInput) {
+        try {
+            System.out.print("Choose promotion (1-4): ");
+            String input = scanner.next().trim();
+            
+            if (!input.matches("[1-4]")) {
+                throw new IllegalArgumentException("Please enter a number between 1 and 4");
+            }
+            
+            choice = Integer.parseInt(input);
+            validInput = true;
+            
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid input: " + e.getMessage());
+            scanner.nextLine(); 
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+    
+    // Promotion execution
+    Piece pawn = square.getPiece();
+    boolean colour = pawn.isWhite();
+    ArrayList<Piece> chosenColour = (colour ? whitePieces : blackPieces);
+    
+    // Remove the pawn first
+    chosenColour.remove(pawn);
+    
+    // Create and set the new promoted piece
+    Piece promotedPiece;
+    switch (choice) {
+        case 1 -> promotedPiece = new Queen(colour);
+        case 2 -> promotedPiece = new Rook(colour);
+        case 3 -> promotedPiece = new Knight(colour);
+        case 4 -> promotedPiece = new Bishop(colour);
+        default -> throw new IllegalStateException("Unexpected promotion choice");
+    }
+    
+    square.setPiece(promotedPiece);
+    promotedPiece.setCurrentSquare(square);  // Important for tracking position
+    chosenColour.add(promotedPiece);
+    
+    System.out.println("Pawn promoted to " + promotedPiece.getClass().getSimpleName());
+    }
+    
     // Moving a Piece
     public boolean movePiece(Coordinate from, Coordinate to) 
     {
@@ -481,6 +483,8 @@ public class Board
                 FileIO.saveCapturedWhite(capturedWhite);
             }
         }
+        
+        if (piece instanceof Pawn && (to.getRow() == 0 || to.getRow() == 7)) promotion(endSquare);
 
         // Switch turn.
         whiteTurn = !whiteTurn;
