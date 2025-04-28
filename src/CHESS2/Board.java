@@ -98,19 +98,20 @@ public class Board
     }
     
     
-    public void promotion(Square square) {
-    Scanner scanner = new Scanner(System.in);
-    int choice = 0;
-    boolean validInput = false;
-    
-    System.out.println("\nPROMOTION MENU");
-    System.out.println("1 - Queen");
-    System.out.println("2 - Rook");
-    System.out.println("3 - Knight");
-    System.out.println("4 - Bishop");
-    
-    // Input validation loop
-    while (!validInput) {
+    public void promotion(Square square) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        int choice = 0;
+        boolean validInput = false;
+
+        System.out.println("\nPROMOTION MENU");
+        System.out.println("1 - Queen");
+        System.out.println("2 - Rook");
+        System.out.println("3 - Knight");
+        System.out.println("4 - Bishop");
+
+        // Input validation loop
+        while (!validInput) {
         try {
             System.out.print("Choose promotion (1-4): ");
             String input = scanner.next().trim();
@@ -159,7 +160,7 @@ public class Board
     // Draw the board in the console
     public void drawBoard() 
     {
-        System.out.println("  a  b  c  d e  f  g  h");
+        System.out.println("  a b c d e f g h");
         for (int row = 0; row < 8; row++) 
         {
             System.out.print((8 - row) + " ");
@@ -170,44 +171,43 @@ public class Board
             }
             System.out.println((8 - row));
         }
-        System.out.println("  a  b  c  d e  f  g  h");
+        System.out.println("  a b c d e f g h");
     }
     
+    //Gets Path towards the king
+    private ArrayList<Coordinate> getPath(Coordinate attackerCoordinate, Piece attacker, Coordinate kingPosition) 
+    {
+        ArrayList<Coordinate> path = new ArrayList<>();
     
-    private ArrayList<Coordinate> getPath(Coordinate attackerCoordinate, Piece attacker, Coordinate kingPosition) {
-    ArrayList<Coordinate> path = new ArrayList<>();
+        // Calculate direction vectors
+        int colStep = Integer.compare(kingPosition.getCol(), attackerCoordinate.getCol());
+        int rowStep = Integer.compare(kingPosition.getRow(), attackerCoordinate.getRow());
     
-    // Calculate direction vectors
-    int colStep = Integer.compare(kingPosition.getCol(), attackerCoordinate.getCol());
-    int rowStep = Integer.compare(kingPosition.getRow(), attackerCoordinate.getRow());
+        // Knight case (returns just attacker's position)
+        if (attacker instanceof Knight) 
+        {
+            path.add(attackerCoordinate);
+            return path;
+        }   
+        // Generate path squares
+        int curentCol = attackerCoordinate.getCol();
+        int curentRow = attackerCoordinate.getRow();
     
-    // Knight case (returns just attacker's position)
-    if (attacker instanceof Knight) {
-        path.add(attackerCoordinate);
+        // For pieces (rook, bishop, queen)
+        while (curentCol != kingPosition.getCol() || curentRow != kingPosition.getRow() ) 
+        {
+            // Add intermediate squares to path
+            path.add(new Coordinate(curentRow, curentCol));
+            // Move towards king
+            curentCol += colStep;
+            curentRow += rowStep;
+            // Safety check to prevent infinite loops
+            if ((curentCol < 0 || curentCol > 7) || (curentRow < 0 || curentRow > 7) ) break;
+        }
         return path;
     }
     
-    // Generate path squares
-    
-    int curentCol = attackerCoordinate.getCol();
-    int curentRow = attackerCoordinate.getRow();
-    
-    // For orthogonal/diagonal pieces (rook, bishop, queen)
-    while (curentCol != kingPosition.getCol() || curentRow != kingPosition.getRow() ) {
-        // Add intermediate squares to path
-        path.add(new Coordinate(curentRow, curentCol));
-        
-        // Move towards king
-        curentCol += colStep;
-        curentRow += rowStep;
-        
-        // Safety check to prevent infinite loops
-        if ((curentCol < 0 || curentCol > 7) || (curentRow < 0 || curentRow > 7) ) break;
-    }
-    
-    return path;
-    }
-    
+    // Check method
     public boolean check()
     {
         //This function uses the 'checkAttackers' function to see if we're in check 
@@ -223,125 +223,131 @@ public class Board
         return false;
     }
     
-   
-    public boolean checkmate(Piece attacker) {
-    
-    //There are two conditions for a king to be checkmated, this function checks both of them    
+    //Checkmate Method
+    public boolean checkmate(Piece attacker) 
+    {
+        //There are two conditions for a king to be checkmated, this function checks both of them    
         
-    King king = getKing(whiteTurn);
-    Coordinate kingPos = new Coordinate(king.getCurrentSquare().getRow(), 
-                                      king.getCurrentSquare().getCol());
+        King king = getKing(whiteTurn);
+        Coordinate kingPos = new Coordinate(king.getCurrentSquare().getRow(), 
+                                         king.getCurrentSquare().getCol());
 
-    // 1. Check if piece can block or capture the attacking piece 
-    ArrayList<Coordinate> attackPath = getPath( 
-        new Coordinate(attacker.getCurrentSquare().getRow(), 
-        attacker.getCurrentSquare().getCol()),
-        attacker,
-        kingPos // gets the path of the attacker coordinates to the king coordinates
-    );
+        // 1. Check if piece can block or capture the attacking piece 
+        ArrayList<Coordinate> attackPath = getPath( 
+            new Coordinate(attacker.getCurrentSquare().getRow(), 
+             attacker.getCurrentSquare().getCol()),
+            attacker,
+            kingPos // gets the path of the attacker coordinates to the king coordinates
+        );
     
-    attackPath.add(new Coordinate(attacker.getCurrentSquare().getRow(),
+        attackPath.add(new Coordinate(attacker.getCurrentSquare().getRow(),
                                 attacker.getCurrentSquare().getCol()));
 
-    ArrayList<Piece> allies = whiteTurn ? whitePieces : blackPieces; //Get all ally pieces
-    int pieceCounter = 0;
-    boolean foundBlock = false;
+        ArrayList<Piece> allies = whiteTurn ? whitePieces : blackPieces; //Get all ally pieces
+        int pieceCounter = 0;
+        boolean foundBlock = false;
 
-    for (Piece ally : allies) {
-        pieceCounter++;
-        if (pieceCounter <= 16) continue;
-        if (ally instanceof King) continue;
+        for (Piece ally : allies) {
+            pieceCounter++;
+            if (pieceCounter <= 16) continue;
+            if (ally instanceof King) continue;
         
-        Square allySquare = ally.getCurrentSquare();
-        if (allySquare == null) continue;
+            Square allySquare = ally.getCurrentSquare();
+            if (allySquare == null) continue;
 
-        Coordinate allyPos = new Coordinate(allySquare.getRow(), allySquare.getCol());
+            Coordinate allyPos = new Coordinate(allySquare.getRow(), allySquare.getCol());
         
-        for (Coordinate blockSquare : attackPath) { //Check if ally can interupt the attackers path
-            if (ally.isValidMove(allyPos.getRow(), allyPos.getCol(),
-                               blockSquare.getRow(), blockSquare.getCol(), this)) {
+            for (Coordinate blockSquare : attackPath) { //Check if ally can interupt the attackers path
+                if (ally.isValidMove(allyPos.getRow(), allyPos.getCol(),
+                               blockSquare.getRow(), blockSquare.getCol(), this)) 
+                {
+                    // Simulate the move to see if king is still in check after move takes place
+                    Piece original = board[blockSquare.getRow()][blockSquare.getCol()].getPiece();
+                    makeTempMove(ally, allyPos, blockSquare);
                 
-
-                // Simulate the move to see if king is still in check after move takes place
-                Piece original = board[blockSquare.getRow()][blockSquare.getCol()].getPiece();
-                makeTempMove(ally, allyPos, blockSquare);
+                    boolean stillInCheck = checkAttackers(this, kingPos, 
+                                                    whiteTurn ? blackPieces : whitePieces) > 0;
                 
-                boolean stillInCheck = checkAttackers(this, kingPos, 
-                                                   whiteTurn ? blackPieces : whitePieces) > 0;
+                    undoTempMove(ally, allyPos, blockSquare, original); 
+                    //Undo move, we are just checking for checkmate not actually going through with the move
                 
-                undoTempMove(ally, allyPos, blockSquare, original); 
-                //Undo move, we are just checking for checkmate not actually going through with the move
-                
-                if (!stillInCheck) {
-                    foundBlock = true; // return if piece succesfully blocked or captured
-                }
-            }
-        }
-    }
-
-    if (foundBlock) { // If theres a blocker or we can capture then no checkmate
-        return false;
-    }
-
-    // 2. Check king can escape by moving by checking if every possible move is valid
-    for (int rowDelta = -1; rowDelta <= 1; rowDelta++) {
-        for (int colDelta = -1; colDelta <= 1; colDelta++) { // every possible move 
-            if (rowDelta == 0 && colDelta == 0) continue;
-            
-            int newRow = kingPos.getRow() + rowDelta;
-            int newCol = kingPos.getCol() + colDelta;
-            
-            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                // Check for friendly piece first
-                Piece targetPiece = board[newRow][newCol].getPiece();
-                if (targetPiece != null && targetPiece.isWhite() == whiteTurn) {
-                    continue;
-                }
-                
-                if (king.isValidMove(kingPos.getRow(), kingPos.getCol(), // Checks if move is valid
-                                   newRow, newCol, this)) {
-                    if (checkAttackers(this, new Coordinate(newRow, newCol),
-                                     whiteTurn ? blackPieces : whitePieces) == 0) {
-                        return false; // return if king can escape
+                    if (!stillInCheck) 
+                    {
+                        foundBlock = true; // return if piece succesfully blocked or captured
                     }
                 }
             }
         }
+        if (foundBlock) 
+        { // If theres a blocker or we can capture then no checkmate
+            return false;
+        }
+
+        // 2. Check king can escape by moving by checking if every possible move is valid
+        for (int rowDelta = -1; rowDelta <= 1; rowDelta++) 
+        {
+            for (int colDelta = -1; colDelta <= 1; colDelta++) 
+            { // every possible move 
+                if (rowDelta == 0 && colDelta == 0) continue;
+            
+                int newRow = kingPos.getRow() + rowDelta;
+                int newCol = kingPos.getCol() + colDelta;
+            
+                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) 
+                {
+                    // Check for friendly piece first
+                    Piece targetPiece = board[newRow][newCol].getPiece();
+                    if (targetPiece != null && targetPiece.isWhite() == whiteTurn) 
+                    {
+                        continue;
+                    }
+                
+                    if (king.isValidMove(kingPos.getRow(), kingPos.getCol(),newRow, newCol, this)) 
+                    {
+                        if (checkAttackers(this, new Coordinate(newRow, newCol),whiteTurn ? blackPieces : whitePieces) == 0) 
+                        {
+                            return false; // return if king can escape
+                        }
+                    }
+                }
+            }
+        }
+        // No way to move out of or prevent checkmate, checkamte is returned
+        return true;
+    }   
+    
+    private void makeTempMove(Piece piece, Coordinate from, Coordinate to) 
+    {
+        board[to.getRow()][to.getCol()].setPiece(piece);
+        piece.setCurrentSquare(board[to.getRow()][to.getCol()]);
+        board[from.getRow()][from.getCol()].setPiece(null);
+    }
+
+    private void undoTempMove(Piece piece, Coordinate from, Coordinate to, Piece original) 
+    {
+        board[to.getRow()][to.getCol()].setPiece(original);
+        piece.setCurrentSquare(board[from.getRow()][from.getCol()]);
+        board[from.getRow()][from.getCol()].setPiece(piece);
     }
     
-    // No way to move out of or prevent checkmate, checkamte is returned
-    
-    return true;
-}   
-    
-    private void makeTempMove(Piece piece, Coordinate from, Coordinate to) {
-    board[to.getRow()][to.getCol()].setPiece(piece);
-    piece.setCurrentSquare(board[to.getRow()][to.getCol()]);
-    board[from.getRow()][from.getCol()].setPiece(null);
-}
-
-    private void undoTempMove(Piece piece, Coordinate from, Coordinate to, Piece original) {
-    board[to.getRow()][to.getCol()].setPiece(original);
-    piece.setCurrentSquare(board[from.getRow()][from.getCol()]);
-    board[from.getRow()][from.getCol()].setPiece(piece);
-}
-    
-    public int checkAttackers(Board board, Coordinate kingPosition, ArrayList<Piece> enemyList) {
-    
-        
+    // Checking Attackers of the king
+    public int checkAttackers(Board board, Coordinate kingPosition, ArrayList<Piece> enemyList) 
+    {
         // This function is desinged to go through every enemy piece and check if they can attack the king
         int startRow = kingPosition.getRow();
         int startCol = kingPosition.getCol();
         int attackers = 0;
         int first16 = 0; 
 
-        for(Piece enemy : enemyList) {
+        for(Piece enemy : enemyList) 
+        {
             if(first16 == 16) 
             {
                 Square enemySquare = enemy.getCurrentSquare();
 
 
-                if(enemySquare == null) {
+                if(enemySquare == null) 
+                {
                     continue;
                 }
 
@@ -350,8 +356,8 @@ public class Board
                     enemySquare.getCol(),
                     startRow,
                     startCol,
-                    board)) {
-
+                    board)) 
+                {
                     attackers++;
                     System.out.println("\nSimulating move...");
                     System.out.println(enemy.getSymbol() + " Can Attack Your King\n");
@@ -362,119 +368,125 @@ public class Board
                 first16++;
             }
         }
-
         return attackers;
     }
     
     // Moving a Piece
-    public boolean movePiece(Coordinate from, Coordinate to) {
-    int startRow = from.getRow();
-    int startCol = from.getCol();
-    int endRow = to.getRow();
-    int endCol = to.getCol();
-    
-    Square startSquare = board[startRow][startCol];
-    Square endSquare = board[endRow][endCol];
-    Piece piece = startSquare.getPiece();
-    
-    
-    
-    // Check if there is a piece at start position.
-    if (piece == null) {
-        System.out.println("No piece at start position.");
-        return false;
-    }
+    public boolean movePiece(Coordinate from, Coordinate to) 
+    {
+        int startRow = from.getRow();
+        int startCol = from.getCol();
+        int endRow = to.getRow();
+        int endCol = to.getCol();
 
-    // Check for capturing own pieces.
-    if (endSquare.getPiece() != null && endSquare.getPiece().isWhite() == piece.isWhite()) {
-        System.out.println("Cannot capture your own piece.");
-        return false;
-    }
+        Square startSquare = board[startRow][startCol];
+        Square endSquare = board[endRow][endCol];
+        Piece piece = startSquare.getPiece();
 
-    // Check whose turn it is.
-    if (piece.isWhite() != whiteTurn) {
-        System.out.println("It's " + (whiteTurn ? "White" : "Black") + "'s turn.");
-        return false;
-    }
 
-    // Check if the move is valid.
-    if (!piece.isValidMove(startRow, startCol, endRow, endCol, this)) {
-        System.out.println("Invalid move for that piece.");
-        return false;
-    }
 
-    // Save the original state in case we need to revert
-    Piece originalEndPiece = endSquare.getPiece();
-    Piece originalStartPiece = startSquare.getPiece();
-    
-    // Make the move temporarily
-    endSquare.setPiece(piece);
-    piece.setCurrentSquare(endSquare);
-    startSquare.setPiece(null);
-
-    // Handle capturing opponent's pieces (temporarily)
-    if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) {
-        if (whiteTurn) {
-            blackPieces.remove(originalEndPiece);
-        } else {
-            whitePieces.remove(originalEndPiece);
+        // Check if there is a piece at start position.
+        if (piece == null) 
+        {
+            System.out.println("No piece at start position.");
+            return false;
         }
-    }
 
-    // Check if this move leaves our king in check
-    King king = getKing(whiteTurn);
-    Square kingSquare = king.getCurrentSquare();
-    Coordinate kingPosition = new Coordinate(kingSquare.getRow(), kingSquare.getCol());
-    int attackers = checkAttackers(this, kingPosition, (!whiteTurn ? whitePieces : blackPieces));
-    
-    // Revert the move if it leaves king in check
-    if (attackers > 0) {
-        // Revert the board state
-        startSquare.setPiece(originalStartPiece);
-        piece.setCurrentSquare(startSquare);
-        endSquare.setPiece(originalEndPiece);
-        
-        // Restore captured piece if there was one
-        if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) {
-            if (whiteTurn) {
-                blackPieces.add(originalEndPiece);
-            } else {
-                whitePieces.add(originalEndPiece);
+        // Check for capturing own pieces.
+        if (endSquare.getPiece() != null && endSquare.getPiece().isWhite() == piece.isWhite()) 
+        {
+            System.out.println("Cannot capture your own piece.");
+            return false;
+        }
+
+        // Check whose turn it is.
+        if (piece.isWhite() != whiteTurn) 
+        {
+            System.out.println("It's " + (whiteTurn ? "White" : "Black") + "'s turn.");
+            return false;
+        }
+
+        // Check if the move is valid.
+        if (!piece.isValidMove(startRow, startCol, endRow, endCol, this)) 
+        {
+            System.out.println("Invalid move for that piece.");
+            return false;
+        }
+
+        // Save the original state in case we need to revert
+        Piece originalEndPiece = endSquare.getPiece();
+        Piece originalStartPiece = startSquare.getPiece();
+
+        // Make the move temporarily
+        endSquare.setPiece(piece);
+        piece.setCurrentSquare(endSquare);
+        startSquare.setPiece(null);
+
+        // Handle capturing opponent's pieces (temporarily)
+        if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) 
+        {
+            if (whiteTurn) 
+            {
+                blackPieces.remove(originalEndPiece);
+            } 
+            else 
+            {
+                whitePieces.remove(originalEndPiece);
             }
         }
-        
-        System.out.println("Move leaves king in check.");
-        return false;
-    }
 
-    // Handle pawn promotion (only after we know the move is valid)
-    if (piece instanceof Pawn) {
-        if ((piece.isWhite() && endRow == 0) || (!piece.isWhite() && endRow == 7)) {
-            System.out.println("Pawn reaches promotion rank! Promoting to Queen.");
-            promotion(endSquare);
-            whiteTurn = !whiteTurn; // Switch turn after promotion
-            return true;
+        // Check if this move leaves our king in check
+        King king = getKing(whiteTurn);
+        Square kingSquare = king.getCurrentSquare();
+        Coordinate kingPosition = new Coordinate(kingSquare.getRow(), kingSquare.getCol());
+        int attackers = checkAttackers(this, kingPosition, (!whiteTurn ? whitePieces : blackPieces));
+
+        // Revert the move if it leaves king in check
+        if (attackers > 0) 
+        {
+            // Revert the board state
+            startSquare.setPiece(originalStartPiece);
+            piece.setCurrentSquare(startSquare);
+            endSquare.setPiece(originalEndPiece);
+
+            // Restore captured piece if there was one
+            if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) 
+            {
+                if (whiteTurn) 
+                {
+                    blackPieces.add(originalEndPiece);
+                } 
+                else 
+                {
+                    whitePieces.add(originalEndPiece);
+                }
+            }
+            System.out.println("Move leaves king in check.");
+            return false;
         }
-    }
 
-    // If we got here, the move is valid and doesn't leave king in check
-    // Now handle the capture for real (already done above, but need to save to file)
-    if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) {
-        System.out.println(piece.getSymbol() + " captures " + originalEndPiece.getSymbol());
-        if (whiteTurn) {
-            capturedBlack.add(originalEndPiece);
-            FileIO.saveCapturedBlack(capturedBlack);
-        } else {
-            capturedWhite.add(originalEndPiece);
-            FileIO.saveCapturedWhite(capturedWhite);
+        // If we got here, the move is valid and doesn't leave king in check
+        // Now handle the capture for real (already done above, but need to save to file)
+        if (originalEndPiece != null && piece.isOpponent(originalEndPiece)) 
+        {
+            System.out.println(piece.getSymbol() + " captures " + originalEndPiece.getSymbol());
+            if (whiteTurn) 
+            {
+                capturedBlack.add(originalEndPiece);
+                FileIO.saveCapturedBlack(capturedBlack);
+            } 
+            else 
+            {
+                capturedWhite.add(originalEndPiece);
+                FileIO.saveCapturedWhite(capturedWhite);
+            }
         }
-    }
 
-    // Switch turn.
-    whiteTurn = !whiteTurn;
-    
-    return true;
-}
+        // Switch turn.
+        whiteTurn = !whiteTurn;
+
+        return true;
+    }
     
     // Get piece at a given square
     public Piece getPieceAt(int row, int col) 
@@ -494,18 +506,17 @@ public class Board
         return capturedBlack;
     }
     
-    
+    // Get White Pieces
     public ArrayList<Piece> getWhite() 
     {
         return whitePieces;
     }
     
-    // Get Captured White Pieces
+    // Get  Black Pieces
     public ArrayList<Piece> getBlack() 
     {
         return blackPieces;
     }
-    
     
     // Set piece at a given square
     public void setPieceAt(int row, int col, Piece piece) 
@@ -513,14 +524,7 @@ public class Board
         board[row][col].setPiece(piece);
     }
     
-    // Get all legal moves for a given piece
-    public List<Coordinate> getLegalMovesForPiece(Piece piece, Coordinate from) 
-    {
-        return piece.generateLegalMoves(this, from);
-    }
-    
-    
-    // Check if king has been captures (Substitute for Check and Checkmate)
+    // Check if king has been captured
     public boolean isKingCaptured(boolean isWhite) 
     {
     for (int row = 0; row < 8; row++) 
@@ -584,4 +588,27 @@ public class Board
         return null;
     }
     
+    public void addPiece(Piece piece)
+    {
+        if(piece.isWhite())
+        {
+            whitePieces.add(piece);
+        }
+        else
+        {
+            blackPieces.add(piece);
+        }
+    }
+    
+    public void printPieces()
+    {
+        for(Piece pieces : whitePieces)
+        {
+            System.out.println(pieces.getSymbol());
+        }
+        for(Piece pieces : blackPieces)
+        {
+            System.out.println(pieces.getSymbol());
+        }
+    }
 }

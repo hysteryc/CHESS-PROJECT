@@ -17,11 +17,13 @@ import java.util.ArrayList;
  */
 public class FileIO 
 {
+    Board board = new Board();
+    
     // Clears the Captured Files at the Beginning of New Game
     public static void clearCapturedFiles() 
     {
-        try(BufferedWriter ww = new BufferedWriter(new FileWriter("./resources/capturedWhite.txt"));
-            BufferedWriter wb = new BufferedWriter(new FileWriter("./resources/capturedBlack.txt"))) 
+        try(BufferedWriter ww = new BufferedWriter(new FileWriter("./Resources/capturedWhite.txt"));
+            BufferedWriter wb = new BufferedWriter(new FileWriter("./Resources/capturedBlack.txt"))) 
         {
             System.out.println("Captured files cleared successfully.");
         } 
@@ -34,7 +36,7 @@ public class FileIO
     // Saving the Captured White Pieces to a txt file
     public static void saveCapturedWhite(ArrayList<Piece> capturedWhite) 
     {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./resources/capturedWhite.txt"))) 
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Resources/capturedWhite.txt"))) 
         {
             for (Piece piece : capturedWhite) 
             {
@@ -51,7 +53,7 @@ public class FileIO
     // Saving the captured black pieces to a txt file
     public static void saveCapturedBlack(ArrayList<Piece> capturedBlack) 
     {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./resources/capturedBlack.txt"))) 
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Resources/capturedBlack.txt"))) 
         {
             for (Piece piece : capturedBlack) 
             {
@@ -69,7 +71,7 @@ public class FileIO
     public static void printCapturedWhite() 
     {
         System.out.println("Captured White Pieces:");
-        try (BufferedReader reader = new BufferedReader(new FileReader("./resources/capturedWhite.txt"))) 
+        try (BufferedReader reader = new BufferedReader(new FileReader("./Resources/capturedWhite.txt"))) 
         {
             String line;
             while ((line = reader.readLine()) != null) 
@@ -87,20 +89,24 @@ public class FileIO
     public static void printCapturedBlack() 
     {
         System.out.println("Captured Black Pieces:");
-        try (BufferedReader reader = new BufferedReader(new FileReader("./resources/capturedBlack.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("./Resources/capturedBlack.txt"))) 
+        {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) 
+            {
                 System.out.println("- " + line);
             }
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             System.out.println("Error reading captured black pieces: ");
         }
     }
     
     //Saving the current state of the board to a txt file
-    public static void saveGame(Square[][] board, boolean whiteTurn, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack) 
+    public static void saveGame(Board board, boolean whiteTurn, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack) 
     {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./resources/boardState.txt"))) 
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("./Resources/boardState.txt"))) 
         {
             bw.write("Turn: " + (whiteTurn ? "White" : "Black"));
             bw.newLine();
@@ -112,7 +118,7 @@ public class FileIO
                 StringBuilder line = new StringBuilder();
                 for (int col = 0; col < 8; col++) 
                 {
-                    Piece piece = board[row][col].getPiece();
+                    Piece piece = board.getPieceAt(row, col);
                     if (piece == null) 
                     {
                         line.append(".,");
@@ -148,9 +154,9 @@ public class FileIO
     }
     
     // Loading the Saved Board State from a txt file
-    public static void loadGame(Square[][] board, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack)
+    public static void loadGame(Board board, ArrayList<Piece> capturedWhite, ArrayList<Piece> capturedBlack)
     {
-        try(BufferedReader br = new BufferedReader(new FileReader("./resources/boardState.txt")))
+        try(BufferedReader br = new BufferedReader(new FileReader("./Resources/boardState.txt")))
         {
             String line = br.readLine();
             if (line.contains("White")) 
@@ -171,12 +177,13 @@ public class FileIO
                     String s = symbols[col];
                     if (s.equals(".")) 
                     {
-                        board[row][col].setPiece(null);
+                        board.setPieceAt(row, col, null);
                     } 
                     else 
                     {
                         Piece piece = PieceCreator.createFromSymbol(s); 
-                        board[row][col].setPiece(piece);
+                        board.setPieceAt(row, col, piece);
+                        
                     }
                 }
             }
