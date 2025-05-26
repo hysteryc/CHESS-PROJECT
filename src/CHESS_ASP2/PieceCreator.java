@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package CHESS;
+package CHESS_ASP2;
 
 /**
  *
@@ -13,8 +13,6 @@ public class PieceCreator
     // Creating the piece from its unicode Symbol (load game function)
     public static Piece createFromSymbol(String symbol) 
     {
-        symbol = symbol.trim();
-        
         switch (symbol) 
         {
             case "♙": return new Pawn(true);

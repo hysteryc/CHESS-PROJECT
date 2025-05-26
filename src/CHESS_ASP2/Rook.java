@@ -1,4 +1,4 @@
-package CHESS2;
+package CHESS_ASP2;
 
 import java.util.ArrayList;
 import java.util.List;

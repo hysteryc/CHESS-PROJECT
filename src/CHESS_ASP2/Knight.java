@@ -1,4 +1,4 @@
-package CHESS2;
+package CHESS_ASP2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,7 @@ public class Knight extends Piece
         return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
     }
 
+    // Method for Testing for next iteration with GUI Implemeted (For next assignment)
     @Override
     public List<Coordinate> generateLegalMoves(Board board, Coordinate from) 
     {

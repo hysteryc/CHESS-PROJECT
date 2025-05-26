@@ -1,4 +1,4 @@
-package CHESS;
+package CHESS_ASP2;
 
 
 
@@ -16,7 +16,7 @@ public class Main
     {
         Piece lastMoved = null;
         Board board = new Board();
-        FileIO fileio = new FileIO();
+        Database db = new Database();
         Scanner scanner = new Scanner(System.in);
         
         FileIO.clearCapturedFiles(); 
@@ -27,12 +27,12 @@ public class Main
         String loadInput = scanner.nextLine();
         if (loadInput.equalsIgnoreCase("yes")) 
         {
-            Database.Load(board, board.getCapturedWhite(), board.getCapturedBlack()); 
+            db.Load(board, board.getCapturedWhite(), board.getCapturedBlack()); 
             System.out.println();
         } 
         else 
         {
-            board.initializeBoard();
+            board.beginNewGame();
         }
 
         while (true) 
@@ -84,7 +84,7 @@ public class Main
             } 
             else if(input.equalsIgnoreCase("save")) 
             {
-                Database.Save(board, board.isWhiteTurn(), board.getCapturedWhite(), board.getCapturedBlack());
+                db.Save(board, board.isWhiteTurn(), board.getCapturedWhite(), board.getCapturedBlack());
                 continue;
             }
             

@@ -1,10 +1,12 @@
-package CHESS2;
+package CHESS_ASP2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class King extends Piece {
-    public King(boolean isWhite) {
+public class King extends Piece 
+{
+    public King(boolean isWhite) 
+    {
         super(isWhite);
     }
     

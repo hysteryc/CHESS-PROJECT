@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package CHESS;
+package CHESS_ASP2;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -161,10 +161,10 @@ public class Database
                     int col = rs.getInt("col");
                     String symbol = rs.getString("symbol");
                     Piece piece = PieceCreator.createFromSymbol(symbol);
-                    board.setPieceAt(row, col, piece);
                     if (piece != null) 
                     {
                         board.addPieceToSide(piece);
+                        board.setPieceAt(row,col,piece);
                     }
                 }
             }
