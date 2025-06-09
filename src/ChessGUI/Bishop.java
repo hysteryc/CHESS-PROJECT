@@ -24,10 +24,10 @@ public class Bishop extends Piece {
     @Override
     public String getSymbol() 
     {
-        return isWhite() ? "♗" : "♝"; 
+        return isWhite() ? "b" : "B"; 
     }
     
-    
+    // Gets the imagePath associated with the Bishop
     @Override
     public ImageIcon getImage() 
     {
@@ -35,7 +35,8 @@ public class Bishop extends Piece {
         return bishopImage;
     }
    
-    
+    //Logic to generate legal moves for a bishop
+    //Iterates through every diagonal square until reaching the edge of the board or another piece.  
     @Override
     public ArrayList<Coordinate> generateLegalMoves(Coordinate origin, GUI gui, boolean flag)
     {
@@ -93,5 +94,5 @@ public class Bishop extends Piece {
         }
         return legalMoves;
     }
-    // Checks Whether the move made is valid to the pieces movement rules.
+    
 }

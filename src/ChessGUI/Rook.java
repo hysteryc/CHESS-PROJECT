@@ -24,15 +24,19 @@ public class Rook extends Piece
     @Override
     public String getSymbol() 
     {
-        return isWhite() ? "♖" : "♜"; 
+        return isWhite() ? "r" : "R"; 
     }
     
+    // Gets the image file for the rook
     @Override
     public ImageIcon getImage() 
     {
         ImageIcon rookImage = new ImageIcon(isWhite ? "chessFiles/chess Pieces/WHITE ROOK.png" : "chessFiles/chess Pieces/BLACK ROOK.png");
         return rookImage;
     }
+    
+    //Logic to generate legal moves for a Rook
+    //Iterates through every horozontal and vertical move the rook can make, adds move to legal moves if the move is possible
     
     @Override
     public ArrayList<Coordinate> generateLegalMoves(Coordinate origin, GUI gui, boolean flag)

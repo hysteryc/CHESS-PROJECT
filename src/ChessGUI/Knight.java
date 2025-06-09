@@ -24,17 +24,18 @@ public class Knight extends Piece
     @Override
     public String getSymbol() 
     {
-        return isWhite() ? "♘" : "♞";  
+        return isWhite() ? "h" : "H";  
     }
 
-    // Checking whether move is valid based upon Pieces movement rules
+    // Gets image file for a knight
    @Override
     public ImageIcon getImage() 
     {
         ImageIcon knightImage = new ImageIcon(isWhite ? "chessFiles/chess Pieces/WHITE KNIGHT.png" : "chessFiles/chess Pieces/BLACK KNIGHT.png");
         return knightImage;
     }
-    
+    //Logic to generate legal moves for a knight
+    //Iterates through every possible knight move and adds the move if valid  
     @Override
     public ArrayList<Coordinate> generateLegalMoves(Coordinate origin, GUI gui, boolean flag)
     {

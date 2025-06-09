@@ -8,11 +8,13 @@ package ChessGUI;
  *
  * @author karlo
  */
+
+//Coordinate is used to pass a set of two integers through a function more effectivly  
 public class Coordinate 
 {
     private final int file;
     private final int row;
-
+    
     public Coordinate(int file, int row)
     {
         
@@ -26,12 +28,13 @@ public class Coordinate
         return row;
     }
 
-    // Getter for Col
+    // Getter for File
     public int getFile()
     {
         return file;
     }
     
+    //Overrides the inbuild equals function to work according to my logic
     @Override
     public boolean equals(Object obj) {
     if (this == obj) return true;

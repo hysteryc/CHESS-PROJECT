@@ -10,12 +10,16 @@ import javax.swing.*;
  *
  * @author karlo
  */
+
+//Square is the variable type that comprises the board
+//No complicated logic here, just basic getters and setters
+
 public class Square 
 {
-    private int row; 
-    private int file; 
+    private final int row; 
+    private final int file; 
     private Piece piece; 
-    private JButton button;
+    private final JButton button;
 
     public Square(int file, int row, JButton button) 
     {
@@ -31,17 +35,19 @@ public class Square
         return row;
     }
     
+    // Getter for button
     public JButton getButton() 
     {
         return button;
     }
     
+    // Setter for image
     public void setImage(ImageIcon icon) 
     {
         button.setIcon(icon);
     }
     
-    // Getter for Col
+    // Getter for File
     public int getFile() 
     {
         return file;

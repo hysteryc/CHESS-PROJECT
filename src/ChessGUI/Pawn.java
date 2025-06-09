@@ -24,17 +24,19 @@ public class Pawn extends Piece
     @Override
     public String getSymbol() 
     {
-        return isWhite ? "♙" : "♟";
+        return isWhite ? "p" : "P";
     }
     
-    // Checking whether Move is Valid based on pieces movement rules.
-    
+    // Gets pawn image file
     @Override
     public ImageIcon getImage() 
     {
         ImageIcon pawnImage = new ImageIcon(isWhite ? "chessFiles/chess Pieces/WHITE PAWN.png" : "chessFiles/chess Pieces/BLACK PAWN.png");
         return pawnImage;
     }
+    
+    //Logic to generate legal moves for a pawn
+    //Iterates through every type of move a pawn can make, adds move to legal moves if the move is possible
     
     @Override
     public ArrayList<Coordinate> generateLegalMoves(Coordinate origin, GUI gui, boolean flag)
@@ -66,6 +68,9 @@ public class Pawn extends Piece
         }
         
         
+         // Pawn capturing on right
+        
+        
         if(withinBounds(startFile+1, startRow + direction) && gui.squares[startFile+1][(startRow + direction)].getPiece() != null) 
         {
             if(gui.squares[startFile+1][(startRow + direction)].getPiece().isWhite() != isWhite)
@@ -74,6 +79,7 @@ public class Pawn extends Piece
             }
         }
         
+         // Pawn capturing on right
         
         if(withinBounds(startFile-1, startRow + direction) && gui.squares[startFile-1][(startRow + direction)].getPiece() != null) 
         {
@@ -83,6 +89,7 @@ public class Pawn extends Piece
             }
         }
         
+         // Check move doesn't leave the king in check
         
         ArrayList<Coordinate> legalMoves = new ArrayList<>();
         

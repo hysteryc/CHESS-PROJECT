@@ -22,9 +22,10 @@ public class King extends Piece {
     @Override
     public String getSymbol() 
     {
-        return isWhite() ? "♔" : "♚";  
+        return isWhite() ? "k" : "K";  
     }
-
+    
+    //Gets image file for the king
     @Override
     public ImageIcon getImage() 
     {
@@ -32,6 +33,8 @@ public class King extends Piece {
         return kingImage;
     }
     
+    //Logic to generate legal moves for a King
+    //Simulates every surrounding square and checks if a move is valid.  
     @Override
     public ArrayList<Coordinate> generateLegalMoves(Coordinate origin, GUI gui, boolean flag)
     {
