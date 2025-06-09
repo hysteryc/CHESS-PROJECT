@@ -332,6 +332,7 @@ public class GUI {
         
         JButton[] promotionOptions = { queen, rook, bishop, knight };
         for (JButton option : promotionOptions) {
+            option.setOpaque(true);
             option.setFocusPainted(false);
             option.setContentAreaFilled(false);
             option.setBorder(selectedBorder);
@@ -466,7 +467,7 @@ public class GUI {
                 button.setFocusPainted(false);
                 button.setBackground( isLight ? boardLightColour : boardDarkColour);
                 button.setForeground(new Color(0, 0, 0, 0));
-                
+                button.setOpaque(true);
                 for (MouseListener ml : button.getMouseListeners()) {
                 button.removeMouseListener(ml);
                 }
